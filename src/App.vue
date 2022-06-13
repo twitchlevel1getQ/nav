@@ -1,31 +1,41 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+  <div id="app" style="width: 100%">
+    <router-view />
   </div>
 </template>
-
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+<script>
+export default {
+  data() {
+    return {
+      isbtn: 1,
+      deptName: null,
+      today: {
+        time: null,
+        date: null,
+      },
+    };
+  },
+  mounted() {
+    let year = new Date().getFullYear();
+    let month =
+      new Date().getMonth() + 1 < 10
+        ? "0" + (new Date().getMonth() + 1)
+        : new Date().getMonth() + 1;
+    let day =
+      new Date().getDate() < 10
+        ? "0" + new Date().getDate()
+        : new Date().getDate();
+    this.today.date = year + "/" + month + "/" + day;
+    let hh = new Date().getHours();
+    let mf =
+      new Date().getMinutes() < 10
+        ? "0" + new Date().getMinutes()
+        : new Date().getMinutes();
+    let ss =
+      new Date().getSeconds() < 10
+        ? "0" + new Date().getSeconds()
+        : new Date().getSeconds();
+    this.today.time = hh + ":" + mf + ":" + ss;
+  },
+};
+</script>

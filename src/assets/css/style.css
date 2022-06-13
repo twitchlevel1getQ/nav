@@ -1,0 +1,172 @@
+ul {
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+}
+
+
+
+.title {
+    padding: 5px 0px;
+    font-size: 35px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.date {
+    margin-left: 5px;
+}
+
+.date .date-left {
+    font-size: 30px;
+    color: rgb(53, 52, 52)
+}
+
+.date .date-right {
+    padding-top: 10px;
+    float: right;
+    font-size: 20px;
+}
+
+.date-time {
+    font-size: 20px;
+}
+
+/*! head button start */
+.buttons {
+    margin: 10px 0px;
+}
+
+.btn-toShowClinic {
+    margin: 4px;
+    font-size: 20px;
+    font-weight: 600;
+    color: #4d4a4a;
+    background-color: #ffffff;
+    border-color: #2c2c2c;
+}
+
+.btn-toShowClinic:hover {
+    color: #fff;
+    background-color: #129cec;
+    border-color: #129cec;
+}
+
+.isactive {
+    color: #fff;
+    background-color: #129cec;
+    border-color: #129cec;
+}
+
+/*! head button end */
+
+.outpatient-section {
+    display: block;
+    overflow: hidden;
+    margin-bottom: 30px;
+    border: 4px #f1f1f1 solid;
+
+}
+
+.row-title {
+    padding: 1em;
+    width: 100%;
+    background: rgb(0 114 195 / 97%);
+    color: white;
+    justify-content: space-between;
+    overflow: hidden;
+}
+
+.page-list a {
+    color: rgb(49, 49, 49);
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.page-list .row-p1 {
+    width: 20%;
+    /* text-align: center; */
+    float: left;
+    margin: 0px;
+}
+
+.page-list .row-p1 div {
+    height: 80px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.row-p1 div:hover {
+    color: #2b85b9;
+    text-decoration: none;
+}
+
+
+.tableApp-show {
+    display: none;
+}
+
+@media screen and (max-width: 991px) {
+    .page-list .row-p1 {
+        width: 25%;
+    }
+
+
+}
+
+@media screen and (max-width: 640px) {
+    .page-list .row-p1 {
+        width: 33%;
+    }
+}
+
+.title-left {
+    float: left;
+}
+
+.title-left .kind {
+    margin-left: 5px;
+}
+
+.title-right {
+    float: right;
+}
+
+.clinic-info-table th {
+    font-size: 18px;
+    padding: 8px;
+    font-weight: 600;
+    border-bottom: #979797 solid;
+    background-image: url(https://zh-tw.sltung.com.tw/tung/OPD/images/thead.png);
+
+}
+
+.clinic-info-table tr td {
+    font-size: 20px;
+    padding: 8px;
+    font-size: 20px;
+    font-weight: 600;
+    border-bottom: rgba(243, 239, 239, 0.712) solid;
+}
+
+.table-layout {
+    padding: 10px;
+}
+
+.table-layout table {
+    width: 100%;
+}
+
+.backgroundground {
+    background-color: rgba(243, 239, 239, 0.712);
+}
+
+tr>th {
+    border-bottom: 1px solid #4f85bb;
+}
