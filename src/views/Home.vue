@@ -7,25 +7,20 @@
     >
       <ul class="page-list">
         <div>
-          <div>
-            <li class="row-title">
-              <div class="title-left">
-                <font-awesome-icon icon="fa-solid fa-bookmark" />
-                <span class="kind">{{ title }}</span>
-              </div>
-              <!-- <span class="title-right">
+          <li class="row-title">
+            <div class="title-left">
+              <font-awesome-icon icon="fa-solid fa-bookmark" />
+              <span class="kind">{{ title }}</span>
+            </div>
+            <!-- <span class="title-right">
                 *<span class="">僅顯示已開始看診科別</span>
               </span> -->
-            </li>
-            <li
-              class="row-p1"
-              v-for="(group, inx) in filterTitle.groups[index]"
-            >
-              <div @click="openDept(inx, group.deptID, group.deptName)">
-                {{ group.deptName }}
-              </div>
-            </li>
-          </div>
+          </li>
+          <li class="row-p1" v-for="(group, inx) in filterTitle.groups[index]">
+            <div @click="openDept(inx, group.deptID, group.deptName)">
+              {{ group.deptName }}
+            </div>
+          </li>
         </div>
       </ul>
     </div>

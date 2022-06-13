@@ -1,7 +1,7 @@
 <template>
   <div class="out-frame">
     <head-component :reloadnum="reloadnum" @noon="getNoon"></head-component>
-    <div class="table-layout">
+    <div>
       <div
         v-if="isTable == false"
         style="font-weight: 600; font-size: 50px; text-align: center"
@@ -9,9 +9,7 @@
         {{ dept.deptTim_zh }}{{ dept.deptName
         }}<span style="color: red"> 無看診</span>
       </div>
-      <!-- <div v-else>有</div>
-      {{ listssss }} -->
-      <!-- // TODO computed  新增顯示資料 -->
+
       <table
         v-else
         class="tableDApp-show"

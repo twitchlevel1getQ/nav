@@ -12,7 +12,7 @@
       <div class="date">
         <span class="date-left">
           <font-awesome-icon icon="fa-solid fa-calendar-days" />
-          <span class="date_time"
+          <span class="date-time"
             >{{ today.date }}
             <span style="color: #ff3434">{{ today.time }}</span></span
           >
