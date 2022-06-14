@@ -1,9 +1,17 @@
+/* //! home start */
+.img-item {
+    padding: 12px;
+    cursor: pointer;
+}
+
+
+/* //! home end */
+
 /* //!head start */
 .title {
     padding: 5px 0px;
     font-size: 35px;
     font-weight: 600;
-    cursor: pointer;
     display: inline-block;
 }
 
@@ -30,6 +38,7 @@
 
 .buttons {
     margin: 10px 0px;
+    clear: both;
 }
 
 .btn-toShowClinic {
@@ -55,7 +64,7 @@
 
 /* //!head end */
 
-/* //! home.vue start */
+/* //! ChooseDept.vue start */
 .outpatient-section {
     display: block;
     overflow: hidden;
@@ -130,7 +139,7 @@ ul .row-p1 {
     }
 }
 
-/* //! home.vue end */
+/* //! ChooseDept.vue end */
 
 
 

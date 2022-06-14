@@ -1,7 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import SelectClinic from './views/SelectClinic.vue'
-import home from './views/Home.vue'
+import ChooseDept from './views/ChooseDept.vue'
+import PatientInquire from './views/PatientInquire.vue'
+import DivisionProgress from './views/DivisionProgress.vue'
+import Home from './views/Home.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -9,13 +12,28 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: home
+      name: 'Home',
+      component: Home
+    },
+    {
+      path: '/ChooseDept',
+      name: 'ChooseDept',
+      component: ChooseDept
+    },
+    {
+      path: '/DivisionProgress',
+      name: 'DivisionProgress',
+      component: DivisionProgress
     },
     {
       path: '/SelectClinic',
       name: 'SelectClinic',
       component: SelectClinic
+    },
+    {
+      path: '/PatientInquire',
+      name: 'PatientInquire',
+      component: PatientInquire
     }
   ]
 })

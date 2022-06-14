@@ -6,8 +6,8 @@
         v-if="isTable == false"
         style="font-weight: 600; font-size: 50px; text-align: center"
       >
-        {{ dept.deptTim_zh }}{{ dept.deptName
-        }}<span style="color: red"> 無看診</span>
+        {{ dept.deptTim_zh }}{{ dept.deptName }}
+        <span style="color: red"> 無看診</span>
       </div>
 
       <table
@@ -71,6 +71,7 @@ export default {
         date: null,
       },
       deptTime: null, //! 上午下午晚上
+      deptBtn: null,
       noon: null,
       lists: [], //! 存放看診資料
       isTable: true,
@@ -91,7 +92,7 @@ export default {
         this.dept.deptID = "";
       } else {
         this.dept.deptID = this.$route.query.deptID;
-        console.log(this.$route.query.deptID);
+        console.log("selectClinic getroutQuery:", this.$route.query.deptID);
       }
       if (this.$route.query.deptName == null) {
         this.dept.deptName = null;
@@ -104,12 +105,15 @@ export default {
       let hh = new Date().getHours();
       if (hh < 12) {
         this.deptTime = 1;
+        this.deptBtn = 1;
         this.dept.deptTim_zh = "上午";
       } else if (hh >= 12 && hh <= 17) {
         this.deptTime = 2;
+        this.deptBtn = 2;
         this.dept.deptTim_zh = "下午";
       } else if (hh > 17) {
         this.deptTime = 3;
+        this.deptBtn = 3;
         this.dept.deptTim_zh = "晚上";
       }
     },
@@ -134,8 +138,8 @@ export default {
         } else {
           this.opdprogressEsLists[opdTimdId - 1] = [];
         }
-        this.filterLists(opdTimdId);
-        console.log("every30sec getopdprogress", rt.val);
+        this.filterLists(this.deptBtn);
+        console.log("every30sec getopdprogress:", rt.val);
       });
     },
     //!取得全部資料
@@ -157,7 +161,7 @@ export default {
         if (opdTimdId == this.deptTime) {
           this.filterLists(opdTimdId);
         }
-        console.log("getopdprogress opdtimid：", opdTimdId, rt.val.resultList);
+        console.log("PushIntoList：", opdTimdId, rt.val.resultList);
         if (opdTimdId < 3) {
           opdTimdId++;
           this.getopdprogressES(opdTimdId);
@@ -178,20 +182,24 @@ export default {
           now = 3;
         }
         this.getopdprogress(now);
-      }, 1000 * 30);
+      }, 1000 * 3);
     },
     //!選擇時間
     getNoon(value) {
       if (value == 0) {
-        this.dept.deptTim_zh = "全部";
+        this.deptBtn = 0;
+        this.dept.deptTim_zh = "今日";
       }
       if (value == 1) {
+        this.deptBtn = 1;
         this.dept.deptTim_zh = "上午";
       }
       if (value == 2) {
+        this.deptBtn = 2;
         this.dept.deptTim_zh = "下午";
       }
       if (value == 3) {
+        this.deptBtn = 3;
         this.dept.deptTim_zh = "晚上";
       }
       this.filterLists(value);

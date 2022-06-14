@@ -1,12 +1,30 @@
 <template>
   <div>
-    <div style="padding: 10px 10px 0px 10px">
-      <h1 @click="srcToHomePage" class="title" v-if="dept.deptName == null">
-        門診看診進度
-      </h1>
-      <h1 @click="srcToHomePage" class="title" v-else>
-        門診看診進度 - {{ dept.deptName }}
-      </h1>
+    <div
+      style="
+        padding: 10px 10px 0px 10px;
+        justify-content: space-between;
+        overflow: hidden;
+      "
+    >
+      <button
+        class="btn btn-unactive btn-toShowClinic"
+        @click="jumpPage('/ChooseDept')"
+        v-if="this.$route.query.deptName != null"
+      >
+        回科別
+      </button>
+      <button class="btn btn-unactive btn-toShowClinic" @click="jumpPage('/')">
+        回首頁
+      </button>
+      <div>
+        <h1 class="title">
+          門診看診進度
+          <p v-if="dept.deptName != null" style="display: inline-block">
+            -{{ dept.deptName }}
+          </p>
+        </h1>
+      </div>
     </div>
     <div style="padding: 10px 10px 0px 10px">
       <div class="date">
@@ -79,6 +97,13 @@ export default {
   mounted() {
     if (this.$route.query.deptName == null) {
       this.dept.deptName = null;
+      this.$router
+        .push({
+          path: "/ChooseDept",
+        })
+        .catch((err) => {
+          err;
+        });
     } else {
       this.dept.deptName = this.$route.query.deptName;
     }
@@ -86,9 +111,9 @@ export default {
     this.setButton();
   },
   methods: {
-    srcToHomePage() {
+    jumpPage(str) {
       this.$router.push({
-        path: "/",
+        path: str,
       });
     },
     //! 取得時間
@@ -113,6 +138,7 @@ export default {
           ? "0" + new Date().getSeconds()
           : new Date().getSeconds();
       this.today.time = hh + ":" + mf + ":" + ss;
+      // this.setButton();
     },
     //!
     setButton() {
@@ -124,7 +150,7 @@ export default {
       } else if (hh > 17) {
         this.isbtn = 3;
       }
-      console.log("head set noon -", this.isbtn);
+      console.log("head setButton：", this.isbtn);
     },
     btn_click(index) {
       this.isbtn = index;
