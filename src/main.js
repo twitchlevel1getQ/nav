@@ -16,6 +16,9 @@ library.add(faCalendarDays, faBookmark, faCircle);
 import { faClipboard } from "@fortawesome/free-regular-svg-icons";
 library.add(faClipboard);
 
+//ckeditor
+import CKEditor from '@ckeditor/ckeditor5-vue2';
+
 
 import './assets/css/bootstrap.min.css'
 import './assets/css/style.css'
@@ -27,6 +30,7 @@ Vue.config.productionTip = false
 Vue.prototype.$axios = axios
 Vue.prototype.$gows = gows
 Vue.use(VueAxios, axios)
+Vue.use(CKEditor);
 
 new Vue({
   router,

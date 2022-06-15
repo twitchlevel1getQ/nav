@@ -128,7 +128,10 @@ export default {
           ? "0" + new Date().getDate()
           : new Date().getDate();
       this.today.date = year + "/" + month + "/" + day;
-      let hh = new Date().getHours();
+      let hh =
+        new Date().getHours() < 10
+          ? "0" + new Date().getHours()
+          : new Date().getHours();
       let mf =
         new Date().getMinutes() < 10
           ? "0" + new Date().getMinutes()

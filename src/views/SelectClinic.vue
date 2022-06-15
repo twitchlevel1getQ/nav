@@ -10,7 +10,7 @@
         <span style="color: red"> 無看診</span>
       </div>
 
-      <table
+      <!-- <table
         v-else
         class="tableDApp-show"
         style="table table-hover align-middle"
@@ -24,9 +24,6 @@
             <th style="width: 30%">備註</th>
           </tr>
         </thead>
-        <!-- {{
-          lists
-        }} -->
         <tbody class="clinic-info-table">
           <tr
             v-for="(item, index) in lists"
@@ -41,21 +38,142 @@
             </td>
             <td>{{ item.doctorName }}</td>
             <td style="color: red">{{ item.calledNumber }}</td>
-            <td></td>
+            <td>
+              <div style="width: 95%">
+                <ckeditor
+                  :editor="editor"
+                  v-model.lazy="editorData"
+                  :config="editorConfig"
+                ></ckeditor>
+                <button style="float: right" class="btn btn-success">
+                  修改
+                </button>
+              </div>
+            </td>
           </tr>
         </tbody>
-      </table>
+      </table> -->
+
+      <div class="clinic-info-table">
+        <div class="row clinic-info-bg" style="">
+          <div class="col-2 d-flex align-items-center">時段big</div>
+          <div class="col-2 d-flex align-items-center">診間</div>
+          <div class="col-2 d-flex align-items-center">醫師</div>
+          <div class="col-2 d-flex align-items-center">目前看診號次</div>
+          <div class="col-4 d-flex align-items-center">備註</div>
+        </div>
+
+        <div
+          class="col"
+          v-for="(item, index) in lists"
+          v-bind:class="{ backgroundground: index % 2 == 1 }"
+        >
+          <div class="row d-flex align-items-center justify-content-center">
+            <div class="col-2 d-flex align-items-center">
+              <span class="no-wrap">{{ filterTime(item.opdTimeID) }}</span>
+            </div>
+            <div class="col-2 d-flex align-items-center">
+              <div>
+                {{ item.roomID }}
+                <span class="text-nowrap">({{ item.roomName }})</span>
+              </div>
+            </div>
+            <div class="col-2 align-items-center justify-content-center">
+              {{ item.doctorName }}
+            </div>
+            <div
+              class="col-2 align-items-center justify-content-center"
+              style="color: red"
+            >
+              {{ item.calledNumber }}
+            </div>
+            <div
+              class="col-4 align-items-center justify-content-center"
+              style="color: red"
+            >
+              <div class="row d-flex m-1 pb-1">
+                <div class="col-9">
+                  <ckeditor
+                    :editor="editor"
+                    v-model="editorData"
+                    :config="editorConfig"
+                  ></ckeditor>
+                </div>
+                <div
+                  class="col-3 d-flex align-items-center justify-content-center"
+                >
+                  <button class="btn btn-success text-nowrap">修改</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="clinic-info-md">
+        <div class="row clinic-info-bg" style="">
+          <div class="col d-flex align-items-center">時段small</div>
+          <div class="col d-flex align-items-center">診間</div>
+          <div class="col d-flex align-items-center">醫師</div>
+          <div class="col d-flex align-items-center">目前看診號次</div>
+        </div>
+
+        <div
+          class="col"
+          v-for="(item, index) in lists"
+          v-bind:class="{ backgroundground: index % 2 == 1 }"
+        >
+          <div class="row d-flex align-items-center justify-content-center">
+            <div class="col d-flex align-items-center">
+              <span class="no-wrap">{{ filterTime(item.opdTimeID) }}</span>
+            </div>
+            <div class="col d-flex align-items-center">
+              <div>
+                {{ item.roomID }}
+                <span class="text-nowrap">({{ item.roomName }})</span>
+              </div>
+            </div>
+            <div class="col align-items-center justify-content-center">
+              {{ item.doctorName }}
+            </div>
+            <div
+              class="col align-items-center justify-content-center"
+              style="color: red"
+            >
+              {{ item.calledNumber }}
+            </div>
+          </div>
+          <div class="row d-flex m-1 pb-1">
+            <div class="col-9">
+              <ckeditor
+                :editor="editor"
+                v-model="editorData"
+                :config="editorConfig"
+              ></ckeditor>
+            </div>
+            <div class="col-3 d-flex align-items-center justify-content-center">
+              <button class="btn btn-success text-nowrap">修改</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 <script>
 import head from "@/views/components/head.vue";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 export default {
   components: {
     "head-component": head,
   },
   data() {
     return {
+      editor: ClassicEditor,
+      editorData: "<h1>Content of the editor.</h1>",
+      editorConfig: {
+        language: "zh",
+      },
       timer: null,
       reloadnum: 0, //!更新時間
       //!src

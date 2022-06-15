@@ -157,14 +157,40 @@ ul .row-p1 {
     display: none;
 }
 
-.clinic-info-table th {
+.clinic-info-table {
     font-size: 18px;
     padding: 8px;
     font-weight: 600;
     border-bottom: #979797 solid;
     background-image: url(https://zh-tw.sltung.com.tw/tung/OPD/images/thead.png);
-
 }
+
+.clinic-info-bg {
+    border-bottom: #979797 solid;
+    background-image: url(https://zh-tw.sltung.com.tw/tung/OPD/images/thead.png);
+}
+
+.clinic-info-md {
+    display: none;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.clinic-info-md-item {
+    background-image: url(https://zh-tw.sltung.com.tw/tung/OPD/images/thead.png);
+    border-bottom: #979797 solid;
+}
+
+@media screen and (max-width: 768px) {
+    .clinic-info-table {
+        display: none;
+    }
+
+    .clinic-info-md {
+        display: block;
+    }
+}
+
 
 .clinic-info-table tr td {
     font-size: 20px;
@@ -175,7 +201,7 @@ ul .row-p1 {
 }
 
 .backgroundground {
-    background-color: rgba(243, 239, 239, 0.712);
+    background-color: rgba(170, 170, 170, 0.712);
 }
 
 tr>th {
