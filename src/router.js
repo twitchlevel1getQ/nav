@@ -5,6 +5,7 @@ import ChooseDept from './views/ChooseDept.vue'
 import PatientInquire from './views/PatientInquire.vue'
 import DivisionProgress from './views/DivisionProgress.vue'
 import EditRemark from './views/EditRemark.vue'
+import ReservePrescription from './views/ReservePrescription.vue'
 import Home from './views/Home.vue'
 Vue.use(Router)
 
@@ -39,6 +40,11 @@ export default new Router({
       path: '/EditRemark',
       name: 'EditRemark',
       component: EditRemark
+    },
+    {
+      path: '/ReservePrescription',
+      name: 'ReservePrescription',
+      component: ReservePrescription
     }
   ]
 })
