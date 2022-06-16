@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="p-2">
     <loading :active.sync="isLoading"> </loading>
-    <div class="p-2 inputList">
+    <div class="inputList pb-2">
       <div class="text-nowrap">
         <label>日期： <input type="date" v-model="search.date" /></label>
       </div>
@@ -54,7 +54,7 @@
         </datalist>
       </div>
     </div>
-    <div class="ck">
+    <div class="m-2">
       <ckeditor
         :editor="editor"
         v-model="editorData"

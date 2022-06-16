@@ -202,6 +202,7 @@ ul .row-p1 {
 /*  //! editRemark start */
 .inputList {
     float: left;
+    width: 100%;
 }
 
 .inputList div {
@@ -220,3 +221,32 @@ ul .row-p1 {
 }
 
 /*  //!  editRemark end*/
+
+/*  //!  divisionProgress start*/
+.division-item {
+    padding: 12px;
+    cursor: pointer;
+}
+
+.division-item>div {
+    color: white;
+    height: 200px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.green {
+
+    background-color: #aec23f;
+}
+
+.brown {
+
+    background-color: #e2af3c;
+}
+
+
+/*  //!  divisionProgress end*/
