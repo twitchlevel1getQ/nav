@@ -1,5 +1,6 @@
 <template>
   <div>
+    <loading :active.sync="isLoading"></loading>
     <div
       style="
         padding: 10px 10px 0px 10px;
@@ -74,6 +75,10 @@
 </template>
 
 <script>
+import Vue from "vue";
+import Loading from "vue-loading-overlay";
+import "vue-loading-overlay/dist/vue-loading.css";
+Vue.component("loading", Loading);
 export default {
   props: {
     reloadnum: {
@@ -82,6 +87,7 @@ export default {
   },
   data() {
     return {
+      isLoading: false,
       isbtn: null,
       deptName: null,
       dept: {
@@ -157,6 +163,7 @@ export default {
     },
     btn_click(index) {
       this.isbtn = index;
+      // this.isLoading = true;
       this.$emit("noon", index);
     },
   },

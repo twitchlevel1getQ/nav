@@ -4,6 +4,7 @@ import SelectClinic from './views/SelectClinic.vue'
 import ChooseDept from './views/ChooseDept.vue'
 import PatientInquire from './views/PatientInquire.vue'
 import DivisionProgress from './views/DivisionProgress.vue'
+import EditRemark from './views/EditRemark.vue'
 import Home from './views/Home.vue'
 Vue.use(Router)
 
@@ -34,6 +35,10 @@ export default new Router({
       path: '/PatientInquire',
       name: 'PatientInquire',
       component: PatientInquire
+    }, {
+      path: '/EditRemark',
+      name: 'EditRemark',
+      component: EditRemark
     }
   ]
 })

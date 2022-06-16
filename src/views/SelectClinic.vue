@@ -1,5 +1,6 @@
 <template>
   <div class="out-frame">
+    <loading :active.sync="isLoading"> </loading>
     <head-component :reloadnum="reloadnum" @noon="getNoon"></head-component>
     <div>
       <div
@@ -10,57 +11,14 @@
         <span style="color: red"> 無看診</span>
       </div>
 
-      <!-- <table
-        v-else
-        class="tableDApp-show"
-        style="table table-hover align-middle"
-      >
-        <thead class="clinic-info-table">
-          <tr>
-            <th style="width: 10%">時段</th>
-            <th style="width: 25%">診間</th>
-            <th style="width: 15%">醫師</th>
-            <th style="width: 15%" class="text-nowrap">目前看診號次</th>
-            <th style="width: 30%">備註</th>
-          </tr>
-        </thead>
-        <tbody class="clinic-info-table">
-          <tr
-            v-for="(item, index) in lists"
-            v-bind:class="{ backgroundground: index % 2 == 1 }"
-          >
-            <td>
-              <span class="no-wrap">{{ filterTime(item.opdTimeID) }}</span>
-            </td>
-            <td>
-              {{ item.roomID }}
-              <span class="text-nowrap">({{ item.roomName }})</span>
-            </td>
-            <td>{{ item.doctorName }}</td>
-            <td style="color: red">{{ item.calledNumber }}</td>
-            <td>
-              <div style="width: 95%">
-                <ckeditor
-                  :editor="editor"
-                  v-model.lazy="editorData"
-                  :config="editorConfig"
-                ></ckeditor>
-                <button style="float: right" class="btn btn-success">
-                  修改
-                </button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table> -->
-
-      <div class="clinic-info-table">
+      <!-- //! rwd 大裝置  -->
+      <div class="clinic-info-lg">
         <div class="row clinic-info-bg" style="">
-          <div class="col-2 d-flex align-items-center">時段big</div>
+          <div class="col-1 d-flex align-items-center">時段</div>
           <div class="col-2 d-flex align-items-center">診間</div>
           <div class="col-2 d-flex align-items-center">醫師</div>
           <div class="col-2 d-flex align-items-center">目前看診號次</div>
-          <div class="col-4 d-flex align-items-center">備註</div>
+          <div class="col-5 d-flex align-items-center">備註</div>
         </div>
 
         <div
@@ -69,7 +27,7 @@
           v-bind:class="{ backgroundground: index % 2 == 1 }"
         >
           <div class="row d-flex align-items-center justify-content-center">
-            <div class="col-2 d-flex align-items-center">
+            <div class="col-1 d-flex align-items-center">
               <span class="no-wrap">{{ filterTime(item.opdTimeID) }}</span>
             </div>
             <div class="col-2 d-flex align-items-center">
@@ -87,32 +45,30 @@
             >
               {{ item.calledNumber }}
             </div>
-            <div
-              class="col-4 align-items-center justify-content-center"
-              style="color: red"
-            >
+            <div class="col-5 align-items-center justify-content-center">
               <div class="row d-flex m-1 pb-1">
                 <div class="col-9">
-                  <ckeditor
-                    :editor="editor"
-                    v-model="editorData"
-                    :config="editorConfig"
-                  ></ckeditor>
+                  <div v-html="item.msg"></div>
                 </div>
                 <div
                   class="col-3 d-flex align-items-center justify-content-center"
                 >
-                  <button class="btn btn-success text-nowrap">修改</button>
+                  <button
+                    class="btn btn-success text-nowrap"
+                    @click="ToEditRemark(index)"
+                  >
+                    修改
+                  </button>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-
+      <!-- //! rwd 小裝置  -->
       <div class="clinic-info-md">
         <div class="row clinic-info-bg" style="">
-          <div class="col d-flex align-items-center">時段small</div>
+          <div class="col d-flex align-items-center">時段</div>
           <div class="col d-flex align-items-center">診間</div>
           <div class="col d-flex align-items-center">醫師</div>
           <div class="col d-flex align-items-center">目前看診號次</div>
@@ -123,7 +79,10 @@
           v-for="(item, index) in lists"
           v-bind:class="{ backgroundground: index % 2 == 1 }"
         >
-          <div class="row d-flex align-items-center justify-content-center">
+          <div
+            class="row d-flex align-items-center justify-content-center"
+            style="height: 60px"
+          >
             <div class="col d-flex align-items-center">
               <span class="no-wrap">{{ filterTime(item.opdTimeID) }}</span>
             </div>
@@ -145,14 +104,15 @@
           </div>
           <div class="row d-flex m-1 pb-1">
             <div class="col-9">
-              <ckeditor
-                :editor="editor"
-                v-model="editorData"
-                :config="editorConfig"
-              ></ckeditor>
+              <div v-html="item.msg"></div>
             </div>
             <div class="col-3 d-flex align-items-center justify-content-center">
-              <button class="btn btn-success text-nowrap">修改</button>
+              <button
+                class="btn btn-success text-nowrap"
+                @click="ToEditRemark(index)"
+              >
+                修改
+              </button>
             </div>
           </div>
         </div>
@@ -163,17 +123,22 @@
 <script>
 import head from "@/views/components/head.vue";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+// import TextPartLanguage from "@ckeditor/ckeditor5-language/src/textpartlanguage";
+
+import Vue from "vue";
+import Loading from "vue-loading-overlay";
+import "vue-loading-overlay/dist/vue-loading.css";
+Vue.component("loading", Loading);
+
 export default {
   components: {
     "head-component": head,
   },
   data() {
     return {
-      editor: ClassicEditor,
-      editorData: "<h1>Content of the editor.</h1>",
-      editorConfig: {
-        language: "zh",
-      },
+      isLoading: false,
+      isIndex: null,
+
       timer: null,
       reloadnum: 0, //!更新時間
       //!src
@@ -192,6 +157,12 @@ export default {
       deptBtn: null,
       noon: null,
       lists: [], //! 存放看診資料
+      RemarkLists: [
+        `<p>Content of the 
+          <strong>editor.</strong>Content of the <strong>editor.
+          </strong>Content of the <strong>editor.</strong></p>
+          `,
+      ], //!備註
       isTable: true,
       opdprogressEsLists: [[], [], []], //! 存放看診資料
     };
@@ -289,6 +260,7 @@ export default {
     //! 畫面刷新
     interval() {
       this.timer = setInterval(() => {
+        // this.isLoading = true;
         this.reloadnum += 1; //! 更新時間
         let hh = new Date().getHours();
         let now = null;
@@ -320,6 +292,8 @@ export default {
         this.deptBtn = 3;
         this.dept.deptTim_zh = "晚上";
       }
+      this.isLoading = true;
+      console.log("value", value);
       this.filterLists(value);
     },
     filterLists(value) {
@@ -338,16 +312,25 @@ export default {
       } else {
         this.lists = this.opdprogressEsLists[value - 1];
       }
+      this.isLoading = false;
+
       if (this.lists.length == 0) {
         this.isTable = false;
       } else {
         this.isTable = true;
       }
+      // this.isLoading = false;
     },
     filterTime(time) {
       if (time == 1) return "上午";
       if (time == 2) return "下午";
       if (time == 3) return "晚上";
+    },
+    ToEditRemark(index) {
+      console.log("tableINdex", index);
+      this.$router.push({
+        path: "/EditRemark",
+      });
     },
   },
   beforeDestroy() {
