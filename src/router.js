@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import SelectClinic from './views/SelectClinic.vue'
 import ChooseDept from './views/ChooseDept.vue'
+import ToSearch from './views/ToSearch.vue'
+import Registed from './views/Registed.vue'
 import PatientInquire from './views/PatientInquire.vue'
 import DivisionProgress from './views/DivisionProgress.vue'
 import EditRemark from './views/EditRemark.vue'
@@ -21,6 +23,16 @@ export default new Router({
       path: '/ChooseDept',
       name: 'ChooseDept',
       component: ChooseDept
+    },
+    {
+      path: '/Registed',
+      name: 'Registed',
+      component: Registed
+    },
+    {
+      path: '/ToSearch',
+      name: 'ToSearch',
+      component: ToSearch
     },
     {
       path: '/DivisionProgress',

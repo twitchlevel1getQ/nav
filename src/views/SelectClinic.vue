@@ -23,19 +23,21 @@
       >
         回首頁
       </button>
-      <div>
-        <h1 class="title">
-          門診看診進度
-          <p v-if="dept.deptName != null" style="display: inline-block">
-            -{{ dept.deptName }}
-          </p>
-        </h1>
+      <div class="title">
+        <div class="title-deptname">門診看診進度</div>
+        <div v-if="dept.deptName != null" class="rwdTitle">
+          <p style="display: inline-block; margin: 0px">-</p>
+          {{ dept.deptName }}
+        </div>
+        <div v-if="dept.deptName != null" class="rwdTitle2">
+          <p style="display: inline-block; margin: 0px">-</p>
+          {{ dept.deptName }}
+        </div>
       </div>
     </div>
-    <div style="padding: 10px 10px 0px 10px">
+    <div style="padding: 0px 10px 0px 10px">
       <div class="date">
         <span class="date-left">
-          <font-awesome-icon icon="fa-solid fa-calendar-days" />
           <span class="date-time"
             >{{ today.date }}
             <span style="color: #ff3434">{{ today.time }}</span></span
@@ -205,7 +207,6 @@ export default {
   data() {
     return {
       isLoading: false,
-
       isbtn: null,
       dept: {
         deptID: null,
@@ -235,7 +236,8 @@ export default {
     this.set();
     this.getTime();
     this.getopdprogressES(1);
-    this.interval();
+    this.interval30S();
+    this.interval1S();
     this.setButton();
   },
   methods: {
@@ -347,7 +349,7 @@ export default {
     },
 
     //! 每30s重新取得資料
-    interval() {
+    interval30S() {
       this.timer = setInterval(() => {
         let hh = new Date().getHours();
         let now = null;
@@ -359,8 +361,21 @@ export default {
           now = 3;
         }
         this.getopdprogress(now);
+      }, 1000 * 30);
+    },
+    interval1S() {
+      this.timer = setInterval(() => {
+        let hh = new Date().getHours();
+        let now = null;
+        if (hh < 12) {
+          now = 1;
+        } else if (hh >= 12 && hh <= 17) {
+          now = 2;
+        } else if (hh > 17) {
+          now = 3;
+        }
         this.getTime();
-      }, 1000 * 3);
+      }, 1000 * 1);
     },
     //! 顯示資料
     filterLists(value) {
