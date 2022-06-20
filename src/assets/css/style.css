@@ -220,6 +220,17 @@ ul .row-p1 {
     /* display: none; */
 }
 
+.btn-blue {
+    color: #fff;
+    background-color: #129cec;
+    border-color: #129cec;
+    width: 300px;
+    margin: 4px;
+    font-size: 20px;
+    font-weight: 600;
+    height: 50px;
+}
+
 /*  //!  editRemark end*/
 
 /*  //!  divisionProgress start*/

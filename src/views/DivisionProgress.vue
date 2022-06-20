@@ -31,6 +31,9 @@
 </template>
 <script>
 export default {
+  mounted() {
+    this.$store.dispatch("updateArea", 1);
+  },
   methods: {
     jumpPage(src) {
       this.$router.push({

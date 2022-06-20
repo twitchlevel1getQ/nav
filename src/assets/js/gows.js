@@ -8,7 +8,7 @@ var gows = {
     callWS: async function (tag, param) {
         let wsParam = new FormData();
         wsParam.append('var', Base64.encode(JSON.stringify(param)));
-        // console.log("base64", Base64.encode(JSON.stringify(param)));
+        // console.log("base64", path + '/EIP/gows.php?wtag=' + tag, Base64.encode(JSON.stringify(param)));
         return new Promise((resolve, reject) => {
             axios.post(path + '/EIP/gows.php?wtag=' + tag, wsParam)
                 .then(
