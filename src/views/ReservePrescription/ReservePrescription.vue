@@ -24,14 +24,32 @@
             </button>
         </div>
         <div class="inputPage w-100" v-if="openPage === 'inputPage'">
-          <input-component :clickedType="clickedMenu"></input-component>
+          <input-component :clickedType="clickedMenu" @update-data="getInputDate"></input-component>
         </div>
         <div class="qrcodePage" v-if="openPage === 'qrcodePage'">
             <p v-if="error" class="text-danger">{{ error }}</p>
-            <p v-else class="decode-result">
-            Last result: <b>{{ result }}</b>
-            </p>
+            {{ qrcodeParam }}
             <qrcode-stream @decode="onDecode" @init="onInit" />
+        </div>
+        <div v-if="result" class="mx-5">
+          <table class="table table-bordered">
+            <thead>
+                <tr>
+                  <th>科別</th>
+                  <th>開始日期</th>
+                  <th>結束日期</th>
+                  <th>狀態</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="data in this.result.resultList" :key="data.injNumber">
+                  <td>{{ data.deptName }}</td>
+                  <td>{{ data.injDateRange.startDate }}</td>
+                  <td>{{ data.injDateRange.endDate }}</td>
+                  <td>{{ data.notice }}</td>
+                </tr>
+            </tbody>
+        </table>
         </div>
 
     </div>
@@ -45,15 +63,18 @@ import inputComponent from './InputChart.vue'
 export default {
   data () {
     return {
+      qrcodeParam: '',
       result: '',
       error: '',
       openPage: '',
-      clickedMenu: ''
+      clickedMenu: '',
+      inputData: {}
     }
   },
   methods: {
     onDecode (result) {
-      this.result = result
+      this.qrcodeParam = result.split('?')[1].split('&')[0].split('=')[1]
+      this.getResult(this.qrcodeParam)
     },
     async onInit (promise) {
       try {
@@ -83,6 +104,23 @@ export default {
     },
     changePage (page) {
       this.openPage = page
+      this.result = null
+    },
+    getInputDate (val) {
+      this.inputData = val
+      this.getResult(this.inputData.idOrChart)
+    },
+    getResult (chart) {
+      const tag = 'pvt.pip.injdataIA'
+      const wsParam = {
+        'wb_base64': 0,
+        'chart': chart,
+        'tag': 'pvt.pip.getinjdata'
+      }
+      this.$gows.callWSOffical(tag, wsParam).then((rt) => {
+        console.log(rt)
+        this.result = rt.val
+      })
     }
 
   },
@@ -108,7 +146,6 @@ export default {
         display: flex;
         flex-direction: column;
         align-items: center;
-        height: 50vh;
     }
     .qrcodePage {
       display: flex;
