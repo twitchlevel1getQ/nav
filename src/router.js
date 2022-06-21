@@ -7,7 +7,7 @@ import Registed from './views/Registed.vue'
 import PatientInquire from './views/PatientInquire.vue'
 import DivisionProgress from './views/DivisionProgress.vue'
 import EditRemark from './views/EditRemark.vue'
-import ReservePrescription from './views/ReservePrescription.vue'
+import ReservePrescription from './views/ReservePrescription/ReservePrescription.vue'
 import Home from './views/Home.vue'
 Vue.use(Router)
 
