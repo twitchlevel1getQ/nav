@@ -309,9 +309,11 @@ ul .row-p1 {
     background-color: #9c7b2c;
 }
 
+/* //!  divisionProgress end */
 
-/*  //!  divisionProgress end*/
 
+
+/* //!  Registed start */
 .regist-info-lg {
     font-size: 18px;
     font-weight: 600;
@@ -324,11 +326,10 @@ ul .row-p1 {
 }
 
 .reg-inputlist {
-    /* float: left; */
     font-size: 20px;
     font-weight: 600;
     width: 100%;
-    margin: 0px 5px;
+    margin: 5px 2px;
 }
 
 .reg-inputlist>div>label {
@@ -342,7 +343,7 @@ ul .row-p1 {
 
 
 .btn-registed {
-    margin: 0px 4px;
+    margin: 0px 4px 5px 4px;
     font-size: 20px;
     font-weight: 600;
     color: #4d4a4a;
@@ -365,3 +366,5 @@ ul .row-p1 {
         display: block;
     }
 }
+
+/* //!  Registed end */
