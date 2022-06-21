@@ -1,29 +1,25 @@
 <template>
   <div>
-    <!-- <router-link to="/ChooseDept">看診進度</router-link>
-    <br>
-    <router-link to="/ReservePrescription">慢性病處方箋預約</router-link> -->
-
     <div class="row justify-content-center">
       <img class="col-md-8 col-lg-6" src="../assets/head.png" alt="看診進度" />
     </div>
 
     <div class="row justify-content-center">
       <div
-        @click="jumpPage('/ToSearch')"
+        @click="jumpPage('/ChooseDept')"
         class="col-md-4 col-lg-3 division-item"
       >
-        <div class="green">
-          <h1>看診進度</h1>
+        <div class="brown">
+          <h1>門診查詢</h1>
         </div>
       </div>
 
       <div
-        @click="jumpPage('/ReservePrescription')"
+        @click="jumpPage('/Registed')"
         class="col-md-4 col-lg-3 division-item"
       >
-        <div class="brown">
-          <h1>慢性病處方箋預約</h1>
+        <div class="green">
+          <h1>掛號查詢</h1>
         </div>
       </div>
     </div>
@@ -31,9 +27,6 @@
 </template>
 <script>
 export default {
-  mounted() {
-    this.$store.dispatch("updateArea", 1);
-  },
   methods: {
     jumpPage(src) {
       this.$router.push({

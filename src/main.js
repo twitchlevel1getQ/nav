@@ -16,6 +16,10 @@ library.add(faCalendarDays, faBookmark, faCircle);
 import { faClipboard } from "@fortawesome/free-regular-svg-icons";
 library.add(faClipboard);
 
+//sweetalert
+import VueSweetalert2 from 'vue-sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
+
 //ckeditor
 import CKEditor from '@ckeditor/ckeditor5-vue2';
 
@@ -31,6 +35,7 @@ Vue.prototype.$axios = axios
 Vue.prototype.$gows = gows
 Vue.use(VueAxios, axios)
 Vue.use(CKEditor);
+Vue.use(VueSweetalert2);
 
 new Vue({
   router,

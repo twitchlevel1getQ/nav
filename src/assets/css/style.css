@@ -12,10 +12,21 @@
     padding: 5px 0px;
     font-size: 35px;
     font-weight: 600;
+}
+
+
+
+.title-deptname {
     display: inline-block;
 }
 
-.date {
+@media screen and (max-width: 640px) {
+    .title-deptname {
+        display: block;
+    }
+}
+
+title-deptname .date {
     margin-left: 5px;
 }
 
@@ -129,8 +140,6 @@ ul .row-p1 {
     ul .row-p1 {
         width: 25%;
     }
-
-
 }
 
 @media screen and (max-width: 640px) {
@@ -145,6 +154,39 @@ ul .row-p1 {
 
 
 /* //! selectClinic  start*/
+.title {
+    padding: 5px 0px;
+    font-size: 35px;
+    font-weight: 600;
+}
+
+.rwdTitle {
+    display: inline-block;
+}
+
+.rwdTitle2 {
+    display: none;
+}
+
+.title-deptname {
+    display: inline-block;
+}
+
+@media screen and (max-width: 640px) {
+    .title-deptname {
+        display: block;
+    }
+
+    .rwdTitle {
+        display: none;
+    }
+
+    .rwdTitle2 {
+        display: block;
+    }
+}
+
+
 .table-layout {
     padding: 10px;
 }
@@ -175,7 +217,8 @@ ul .row-p1 {
 .clinic-info-bg {
     min-height: 60px;
     border-bottom: #979797 solid;
-    background-image: url(https://zh-tw.sltung.com.tw/tung/OPD/images/thead.png);
+    background: linear-gradient(rgb(221 221 221), rgb(233, 244, 250))
+        /* background-image: url(https://zh-tw.sltung.com.tw/tung/OPD/images/thead.png); */
 }
 
 
@@ -220,6 +263,17 @@ ul .row-p1 {
     /* display: none; */
 }
 
+.btn-blue {
+    color: #fff;
+    background-color: #129cec;
+    border-color: #129cec;
+    width: 300px;
+    margin: 4px;
+    font-size: 20px;
+    font-weight: 600;
+    height: 50px;
+}
+
 /*  //!  editRemark end*/
 
 /*  //!  divisionProgress start*/
@@ -239,14 +293,75 @@ ul .row-p1 {
 }
 
 .green {
-
     background-color: #aec23f;
 }
 
-.brown {
+.green:hover {
+    background-color: #8c9c31;
+}
 
+.brown {
     background-color: #e2af3c;
+}
+
+.brown:hover {
+
+    background-color: #9c7b2c;
 }
 
 
 /*  //!  divisionProgress end*/
+
+.regist-info-lg {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.regist-info-md {
+    font-size: 18px;
+    font-weight: 600;
+    display: none;
+}
+
+.reg-inputlist {
+    /* float: left; */
+    font-size: 20px;
+    font-weight: 600;
+    width: 100%;
+    margin: 0px 5px;
+}
+
+.reg-inputlist>div>label {
+    margin: 5px;
+}
+
+.regist-transDate>p {
+    margin: 0px;
+    display: inline-block;
+}
+
+
+.btn-registed {
+    margin: 0px 4px;
+    font-size: 20px;
+    font-weight: 600;
+    color: #4d4a4a;
+    background-color: #ffffff;
+    border-color: #2c2c2c;
+}
+
+.btn-registed:hover {
+    color: #fff;
+    background-color: #129cec;
+    border-color: #129cec;
+}
+
+@media screen and (max-width: 768px) {
+    .regist-info-lg {
+        display: none;
+    }
+
+    .regist-info-md {
+        display: block;
+    }
+}

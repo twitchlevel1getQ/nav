@@ -1,6 +1,38 @@
 <template>
   <div class="home">
-    <head-component :reload="reloadnum" @noon="getNoon"></head-component>
+    <loading :active.sync="isLoading"> </loading>
+    <!-- //! head start -->
+    <div
+      style="
+        padding: 10px 10px 0px 10px;
+        justify-content: space-between;
+        overflow: hidden;
+      "
+    >
+      <button
+        class="btn btn-unactive btn-toShowClinic"
+        @click="jumpPage('/')"
+        v-if="this.$store.state.area != 0"
+      >
+        回首頁
+      </button>
+      <div>
+        <h1 class="title">門診看診進度</h1>
+      </div>
+    </div>
+    <div style="padding: 10px 10px 0px 10px">
+      <div class="date">
+        <span class="date-left">
+          <span class="date-time"
+            >{{ today.date }}
+            <span style="color: #ff3434">{{ today.time }}</span></span
+          >
+        </span>
+      </div>
+    </div>
+    <!-- //! head end -->
+
+    <!-- //! container start -->
     <div
       class="outpatient-section"
       v-for="(title, index) in filterTitle.deptGroupName"
@@ -12,30 +44,34 @@
               <font-awesome-icon icon="fa-solid fa-bookmark" />
               <span class="kind">{{ title }}</span>
             </div>
-            <!-- <span class="title-right">
-                *<span class="">僅顯示已開始看診科別</span>
-              </span> -->
           </li>
           <li class="row-p1" v-for="(group, inx) in filterTitle.groups[index]">
-            <div @click="openDept(inx, group.deptID, group.deptName)">
+            <div
+              @click="
+                openDept(
+                  title,
+                  filterTitle.deptGroupID[index],
+                  inx,
+                  group.deptID,
+                  group.deptName
+                )
+              "
+            >
               {{ group.deptName }}
             </div>
           </li>
         </div>
       </ul>
     </div>
+    <!-- //! container end -->
   </div>
 </template>
 
 <script>
-import head from "@/views/components/head.vue";
 export default {
-  components: {
-    "head-component": head,
-  },
   data() {
     return {
-      reloadnum: 0, //!調整時間
+      isLoading: false,
       getdeptList: [], //!getapi所有資料
       //! 篩選後資料
       pageGroup: {
@@ -43,14 +79,46 @@ export default {
         deptGroupName: [],
         groups: [],
       },
+      today: {
+        time: null,
+        date: null,
+      },
     };
   },
   mounted() {
     this.getDeptList();
+    this.getTime();
   },
   methods: {
+    //! 取得時間
+    getTime() {
+      let year = new Date().getFullYear();
+      let month =
+        new Date().getMonth() + 1 < 10
+          ? "0" + (new Date().getMonth() + 1)
+          : new Date().getMonth() + 1;
+      let day =
+        new Date().getDate() < 10
+          ? "0" + new Date().getDate()
+          : new Date().getDate();
+      this.today.date = year + "/" + month + "/" + day;
+      let hh =
+        new Date().getHours() < 10
+          ? "0" + new Date().getHours()
+          : new Date().getHours();
+      let mf =
+        new Date().getMinutes() < 10
+          ? "0" + new Date().getMinutes()
+          : new Date().getMinutes();
+      let ss =
+        new Date().getSeconds() < 10
+          ? "0" + new Date().getSeconds()
+          : new Date().getSeconds();
+      this.today.time = hh + ":" + mf + ":" + ss;
+    },
     //!取得所有診間資料
     getDeptList() {
+      this.isLoading = true;
       let param = {
         wb_base64: "0",
         wb_big5: "0",
@@ -65,22 +133,29 @@ export default {
           this.getdeptList = rt.val.resultList;
           console.log("getDeptList", this.getdeptList);
         }
+        this.isLoading = false;
       });
     },
     //! 跳頁
-    openDept(index, id, name) {
-      console.log(index);
+    openDept(groupID, groupName, inx, deptID, deptName) {
+      console.log("opendept", groupName, groupID, deptID, deptName);
       this.$router
         .push({
           path: "/SelectClinic",
-          query: { deptID: id, deptName: name },
+          query: {
+            deptID: deptID,
+            deptName: deptName,
+          },
         })
         .catch((err) => {
           err;
         });
     },
-    getNoon(value) {
-      console.log("head Emit 2Home：", value);
+    //! 跳頁
+    jumpPage(str) {
+      this.$router.push({
+        path: str,
+      });
     },
   },
   computed: {
