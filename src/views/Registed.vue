@@ -1,6 +1,6 @@
 <template>
   <div class="w-100">
-    <div
+    <!-- <div
       style="
         padding: 10px 10px 0px 10px;
         justify-content: space-between;
@@ -14,7 +14,7 @@
       >
         回首頁
       </button>
-    </div>
+    </div> -->
     <!-- //! 輸入欄列表 -->
     <div class="reg-inputlist">
       <div class="d-inline text-wrap">
@@ -50,7 +50,12 @@
           <div class="col-2 d-flex align-items-center">診間</div>
           <div class="col-2 d-flex align-items-center">醫師</div>
           <div class="col-2 d-flex align-items-center">目前看診號次</div>
-          <div class="col-2 d-flex align-items-center">備註</div>
+          <div
+            class="col-2 d-flex align-items-center"
+            style="padding-left: 25px"
+          >
+            備註
+          </div>
         </div>
         <div
           class="col"
@@ -59,11 +64,19 @@
         >
           <div
             class="row d-flex align-items-center justify-content-center"
-            style="height: 90px"
+            style="height: 90px; word-break: break-word"
           >
-            <div class="col-2 d-flex align-items-center regist-transDate">
-              <p>{{ transyy(item.opdDate) }}</p>
-              <p>{{ transmd(item.opdDate) }}({{ item.weekDay }})</p>
+            <div class="col-2 d-flex align-items-center">
+              <div class="regist-transDate">
+                <p>{{ transyy(item.opdDate) }}</p>
+                <p>
+                  {{ transmd(item.opdDate) }}
+                </p>
+                <p>
+                  <span class="text-nowrap">({{ item.weekDay }})</span
+                  >{{ transTimd(item.opdTimeID) }}
+                </p>
+              </div>
             </div>
             <div class="col-2 d-flex align-items-center">
               <div>{{ item.deptName }}</div>
@@ -97,7 +110,7 @@
       <!-- //! rwd 小裝置  table -->
       <div class="regist-info-md" v-if="isTable == true">
         <div class="clinic-info-bg d-flex">
-          <div class="d-flex align-items-center" style="width: 30%">時段</div>
+          <div class="d-flex align-items-center" style="width: 30%">時間</div>
           <div class="d-flex align-items-center" style="width: 20%">科別</div>
           <div class="d-flex align-items-center" style="width: 20%">診間</div>
           <div class="d-flex align-items-center" style="width: 15%">醫師</div>
@@ -121,7 +134,10 @@
                 </p>
                 <p>
                   {{ transmd(item.opdDate) }}
-                  <span class="text-nowrap">({{ item.weekDay }})</span>
+                </p>
+                <p>
+                  <span class="text-nowrap">({{ item.weekDay }})</span
+                  >{{ transTimd(item.opdTimeID) }}
                 </p>
               </div>
             </div>
@@ -161,7 +177,7 @@
               class="d-flex align-items-center"
               style="width: 30%; word-break: break-word"
             >
-              <div>備註2</div>
+              <div>按鈕</div>
             </div>
           </div> -->
         </div>
@@ -194,16 +210,25 @@ export default {
       return yy + "/";
     },
     transmd(str) {
-      let yy = str.substring(0, 4);
       let mm = str.substring(4, 6);
       let dd = str.substring(6, 8);
       return mm + "/" + dd;
+    },
+    transTimd(str) {
+      if (str == 1) {
+        return "上午";
+      }
+      if (str == 2) {
+        return "下午";
+      }
+      if (str == 3) {
+        return "晚上";
+      }
     },
     // ! 取得病患預約看診
     getregquery() {
       let arr = this.search.birthday.split("-");
       let birth = arr[0] + arr[1] + arr[2];
-      console.log(birth);
       let param = {
         wb_base64: "0",
         wb_big5: "0",
@@ -220,7 +245,7 @@ export default {
       this.$gows.callWSOffical("pvt.pip.regquery", param).then((rt) => {
         if (rt.sts == "000000") {
           this.regqueryLists = rt.val.resultList;
-          console.log("getDeptList", rt.val);
+          console.log("getregquery", rt.val);
           this.isTable = true;
         }
       });

@@ -91,10 +91,21 @@
       <div class="clinic-info-lg" v-if="isTable == true">
         <div class="row clinic-info-bg" style="">
           <div class="col-1 d-flex align-items-center">時段</div>
-          <div class="col-2 d-flex align-items-center">診間</div>
-          <div class="col-2 d-flex align-items-center">醫師</div>
-          <div class="col-2 d-flex align-items-center">目前看診號次</div>
-          <div class="col-5 d-flex align-items-center">備註</div>
+          <div class="col-2 d-flex align-items-center justify-content-center">
+            診間
+          </div>
+          <div class="col-2 d-flex align-items-center justify-content-center">
+            醫師
+          </div>
+          <div class="col-2 d-flex align-items-center justify-content-center">
+            目前看診號次
+          </div>
+          <div
+            class="col-5 d-flex align-items-center"
+            style="padding-left: 30px"
+          >
+            備註
+          </div>
         </div>
 
         <div
@@ -106,24 +117,26 @@
             <div class="col-1 d-flex align-items-center">
               <span class="no-wrap">{{ filterTime(item.opdTimeID) }}</span>
             </div>
-            <div class="col-2 d-flex align-items-center">
+            <div class="col-2 d-flex align-items-center justify-content-center">
               <div>
                 {{ item.roomID }}
                 <span class="text-nowrap">({{ item.roomName }})</span>
               </div>
             </div>
-            <div class="col-2 align-items-center justify-content-center">
+            <div class="col-2 d-flex align-items-center justify-content-center">
               {{ item.doctorName }}
             </div>
             <div
-              class="col-2 align-items-center justify-content-center"
+              class="col-2 d-flex align-items-center justify-content-center"
               style="color: red"
             >
               {{ item.calledNumber }}
             </div>
-            <div class="col-5 align-items-center justify-content-center">
-              <div class="row d-flex m-1 pb-1">
-                <div class="col-9">
+            <div class="col-5">
+              <div class="row m-1 pb-1">
+                <div
+                  class="col-9 d-flex align-items-start justify-content-start"
+                >
                   <div v-html="item.msg"></div>
                 </div>
                 <div
@@ -144,10 +157,16 @@
       <!-- //! rwd 小裝置  -->
       <div class="clinic-info-md" v-if="isTable == true">
         <div class="row clinic-info-bg" style="">
-          <div class="col d-flex align-items-center">時段</div>
-          <div class="col d-flex align-items-center">診間</div>
-          <div class="col d-flex align-items-center">醫師</div>
-          <div class="col d-flex align-items-center">目前看診號次</div>
+          <div class="col-3 d-flex align-items-center">時段</div>
+          <div class="col-3 d-flex align-items-center justify-content-center">
+            診間
+          </div>
+          <div class="col-3 d-flex align-items-center justify-content-center">
+            醫師
+          </div>
+          <div class="col-3 d-flex align-items-center justify-content-center">
+            目前看診號次
+          </div>
         </div>
 
         <div
@@ -159,30 +178,30 @@
             class="row d-flex align-items-center justify-content-center"
             style="height: 60px"
           >
-            <div class="col d-flex align-items-center">
+            <div class="col-3 d-flex align-items-center">
               <span class="no-wrap">{{ filterTime(item.opdTimeID) }}</span>
             </div>
-            <div class="col d-flex align-items-center">
+            <div class="col-3 d-flex align-items-center justify-content-center">
               <div>
                 {{ item.roomID }}
                 <span class="text-nowrap">({{ item.roomName }})</span>
               </div>
             </div>
-            <div class="col align-items-center justify-content-center">
+            <div class="col-3 d-flex align-items-center justify-content-center">
               {{ item.doctorName }}
             </div>
             <div
-              class="col align-items-center justify-content-center"
+              class="col-3 d-flex align-items-center justify-content-center"
               style="color: red"
             >
               {{ item.calledNumber }}
             </div>
           </div>
           <div class="row d-flex m-1 pb-1">
-            <div class="col-9">
+            <div class="col-9 d-flex align-items-start">
               <div v-html="item.msg"></div>
             </div>
-            <div class="col-3 d-flex align-items-center justify-content-center">
+            <div class="col-3 d-flex align-items-center">
               <button
                 class="btn btn-success text-nowrap"
                 @click="ToEditRemark(index)"
