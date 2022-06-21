@@ -29,7 +29,7 @@
       <div class="d-inline text-wrap">
         <label> 出生：<input type="date" v-model="search.birthday" /> </label>
       </div>
-      <div class="d-inline text-nowrap">
+      <div class="d-inline text-wrap">
         <label>
           病歷號：<input
             type="text"
@@ -192,7 +192,7 @@ export default {
       search: {
         idNumber: "A256166167",
         birthday: "2020-07-01",
-        patNumber: -6,
+        patNumber: "-6",
       },
       isTable: false,
       regqueryLists: [],
@@ -242,10 +242,11 @@ export default {
         birthday: birth,
         isFirst: "N",
       };
+      console.log(param);
       this.$gows.callWSOffical("pvt.pip.regquery", param).then((rt) => {
         if (rt.sts == "000000") {
           this.regqueryLists = rt.val.resultList;
-          console.log("getregquery", rt.val);
+          console.log("getregquery", rt);
           this.isTable = true;
         }
       });
