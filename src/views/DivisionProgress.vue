@@ -1,30 +1,27 @@
 <template>
-  <div>
-    <!-- <router-link to="/ChooseDept">看診進度</router-link>
-    <br>
-    <router-link to="/ReservePrescription">慢性病處方箋預約</router-link> -->
-
-    <div class="row justify-content-center">
-      <img class="col-md-8 col-lg-6" src="../assets/head.png" alt="看診進度" />
+  <div style="width: 100%">
+    <div class="d-flex justify-content-center">
+      <div class="img">
+        <img
+          style="width: 100%; border-radius: 8px"
+          src="../assets/head.png"
+          alt="看診進度"
+        />
+      </div>
     </div>
 
-    <div class="row justify-content-center">
-      <div
-        @click="jumpPage('/ToSearch')"
-        class="col-md-4 col-lg-3 division-item"
-      >
-        <div class="green">
-          <h1>看診進度</h1>
+    <div class="d-flex justify-content-center">
+      <div class="img d-flex">
+        <div class="context-item color1" @click="jumpPage('/ToSearch')">
+          <p>看診進度</p>
         </div>
-      </div>
-
-      <div
-        @click="jumpPage('/ReservePrescription')"
-        class="col-md-4 col-lg-3 division-item"
-      >
-        <div class="brown">
-          <h1>慢性病處方箋預約</h1>
+        <div
+          class="context-item color2"
+          @click="jumpPage('/ReservePrescription')"
+        >
+          <p>慢性病處方箋預約</p>
         </div>
+        <div class="context-item-empty"></div>
       </div>
     </div>
   </div>
