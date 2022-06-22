@@ -1,42 +1,33 @@
 <template>
   <div>
-    <div class="row justify-content-center">
-      <img class="col-md-8 col-lg-6" src="../assets/head.png" alt="看診進度" />
-    </div>
-
-    <div class="row justify-content-center">
-      <img
-        @click="jumpPage('/DivisionProgress')"
-        class="col-md-4 col-lg-3 img-item"
-        src="../assets/chooseDept.png"
-        alt="看診進度"
-      />
-      <img
-        @click="jumpPage('/PatientInquire')"
-        class="col-md-4 col-lg-3 img-item"
-        src="../assets/patientinquire.png"
-        alt="病人查詢"
-      />
-    </div>
-    <!-- <div class="row justify-content-center">
-      <div
-        @click="jumpPage('/DivisionProgress')"
-        class="col-md-4 col-lg-3 division-item"
-      >
-        <div class="brown">
-          <h1>各項進度</h1>
-        </div>
+    <div class="d-flex justify-content-center">
+      <div class="img">
+        <img
+          style="width: 100%; border-radius: 8px"
+          src="../assets/head.png"
+          alt="看診進度"
+        />
       </div>
-
-      <div
-        @click="jumpPage('/PatientInquire')"
-        class="col-md-4 col-lg-3 division-item"
-      >
-        <div class="green">
-          <h1>查詢取消</h1>
+    </div>
+    <div class="d-flex justify-content-center">
+      <div class="img d-flex">
+        <div class="home-item" @click="jumpPage('/DivisionProgress')">
+          <img
+            style="width: 100%; padding: 12px; border-radius: 25px"
+            src="../assets/chooseDept.png"
+            alt="看診進度"
+          />
         </div>
+        <div class="home-item" @click="jumpPage('/Registed')">
+          <img
+            style="width: 100%; padding: 12px; border-radius: 25px"
+            src="../assets/patientinquire.png"
+            alt="病人查詢"
+          />
+        </div>
+        <!-- <div class="img-item green" style="margin: 12px"></div> -->
       </div>
-    </div> -->
+    </div>
   </div>
 </template>
 <script>

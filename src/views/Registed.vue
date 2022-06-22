@@ -1,20 +1,16 @@
 <template>
   <div class="w-100">
-    <!-- <div
+    <div
       style="
         padding: 10px 10px 0px 10px;
         justify-content: space-between;
         overflow: hidden;
       "
     >
-      <button
-        class="btn btn-unactive btn-toShowClinic"
-        @click="jumpPage('/')"
-        v-if="this.$store.state.area != 0"
-      >
-        回首頁
+      <button class="btn btn-unactive btn-toShowClinic" @click="jumpPage()">
+        上一頁
       </button>
-    </div> -->
+    </div>
     <!-- //! 輸入欄列表 -->
     <div class="reg-inputlist">
       <div class="d-inline text-wrap">
@@ -29,7 +25,7 @@
       <div class="d-inline text-wrap">
         <label> 出生：<input type="date" v-model="search.birthday" /> </label>
       </div>
-      <div class="d-inline text-nowrap">
+      <div class="d-inline text-wrap">
         <label>
           病歷號：<input
             type="text"
@@ -192,17 +188,15 @@ export default {
       search: {
         idNumber: "A256166167",
         birthday: "2020-07-01",
-        patNumber: -6,
+        patNumber: "-6",
       },
       isTable: false,
       regqueryLists: [],
     };
   },
   methods: {
-    jumpPage(str) {
-      this.$router.push({
-        path: str,
-      });
+    jumpPage() {
+      this.$router.back();
     },
     //! 日期
     transyy(str) {
@@ -242,12 +236,28 @@ export default {
         birthday: birth,
         isFirst: "N",
       };
+      console.log(param);
       this.$gows.callWSOffical("pvt.pip.regquery", param).then((rt) => {
         if (rt.sts == "000000") {
           this.regqueryLists = rt.val.resultList;
-          console.log("getregquery", rt.val);
-          this.isTable = true;
+          if (this.regqueryLists.length == 0) {
+            this.$swal.fire({
+              icon: "info",
+              title: "查無資料",
+            });
+            this.isTable = false;
+          } else {
+            this.isTable = true;
+          }
+        } else {
+          this.regqueryLists = rt.val.resultList;
+          this.$swal.fire({
+            icon: "error",
+            title: "查無病歷資料",
+          });
+          this.isTable = false;
         }
+        console.log("getregquery", rt);
       });
     },
   },

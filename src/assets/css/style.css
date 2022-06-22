@@ -1,9 +1,109 @@
-/* //! home start */
-.img-item {
+.context-item {
+    min-height: 100px;
     padding: 12px;
     cursor: pointer;
+    width: 33.3%;
+    margin: 12px;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    background: #ebebeb;
+    color: #fefcfb;
+    /* box-shadow: 2px 2px 7px 2px rgb(0 0 0 / 32%); */
+    ;
 }
 
+.context-item:hover {
+    background: #aaaaaa;
+    color: rgb(243, 243, 243);
+}
+
+.context-item>p {
+    font-size: 20px;
+    font-weight: 600;
+    margin: auto;
+}
+
+.context-item-empty {
+    padding: 12px;
+    width: 33.3%;
+    margin: 12px;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.color1 {
+    background: #35d99b;
+}
+
+.color1:hover {
+    background: #ff918f;
+}
+
+.color2 {
+    background-color: #41d3d3;
+
+}
+
+.color2:hover {
+    background: #ffa267;
+}
+
+
+
+/* //! home start */
+.home-item {
+    cursor: pointer;
+    width: 33%;
+    text-align: center;
+    filter: hue-rotate(102deg);
+}
+
+
+
+.home-item:hover {
+    filter: hue-rotate(308deg)
+}
+
+.img {
+    width: 60%;
+}
+
+
+
+
+
+@media screen and (min-width: 992px) {
+
+    .img {
+        width: 45%;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .home-item {
+        width: 30%;
+    }
+
+    .img {
+        width: 90%;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .home-item {
+        width: 33%;
+
+    }
+
+    .img {
+        width: 100%;
+    }
+}
 
 /* //! home end */
 
@@ -277,10 +377,6 @@ ul .row-p1 {
 /*  //!  editRemark end*/
 
 /*  //!  divisionProgress start*/
-.division-item {
-    padding: 12px;
-    cursor: pointer;
-}
 
 .division-item>div {
     color: white;
@@ -292,22 +388,7 @@ ul .row-p1 {
     text-align: center;
 }
 
-.green {
-    background-color: #aec23f;
-}
 
-.green:hover {
-    background-color: #8c9c31;
-}
-
-.brown {
-    background-color: #e2af3c;
-}
-
-.brown:hover {
-
-    background-color: #9c7b2c;
-}
 
 /* //!  divisionProgress end */
 

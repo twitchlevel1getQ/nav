@@ -30,7 +30,7 @@
           {{ dept.deptName }}
         </div>
         <div v-if="dept.deptName != null" class="rwdTitle2">
-          <p style="display: inline-block; margin: 0px">-</p>
+          <p style="display: inline-block; margin: 0px"></p>
           {{ dept.deptName }}
         </div>
       </div>
