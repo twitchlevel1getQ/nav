@@ -82,7 +82,10 @@
 
     <!-- //! container start -->
     <div style="text-align: center">
-      <h1 style="font-weight: 600; font-size: 50px" v-if="isTable == false">
+      <h1
+        style="font-weight: 600; font-size: 30px; margin: 0px 20px"
+        v-if="isTable == false"
+      >
         {{ dept.deptTim_zh }}{{ dept.deptName }}
         <p style="color: red; display: inline-block">目前無看診資料</p>
       </h1>

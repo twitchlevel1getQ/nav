@@ -21,7 +21,11 @@
         <div class="context-item-empty"></div>
       </div>
     </div>
-
+    <div class="d-flex justify-content-center" style="margin: 12px">
+      <div class="img d-flex justify-content-center rollback" @click="goback()">
+        上一頁
+      </div>
+    </div>
     <!-- <div class="row justify-content-center">
       <div
         @click="jumpPage('/ChooseDept')"
@@ -46,6 +50,9 @@
 <script>
 export default {
   methods: {
+    goback() {
+      this.$router.back();
+    },
     jumpPage(src) {
       this.$router.push({
         path: src,

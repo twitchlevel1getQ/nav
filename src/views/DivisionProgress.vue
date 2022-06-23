@@ -24,6 +24,11 @@
         <div class="context-item-empty"></div>
       </div>
     </div>
+    <div class="d-flex justify-content-center" style="margin: 12px">
+      <div class="img d-flex justify-content-center rollback" @click="goback()">
+        上一頁
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -32,6 +37,9 @@ export default {
     this.$store.dispatch("updateArea", 1);
   },
   methods: {
+    goback() {
+      this.$router.back();
+    },
     jumpPage(src) {
       this.$router.push({
         path: src,

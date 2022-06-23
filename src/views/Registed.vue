@@ -236,7 +236,6 @@ export default {
         birthday: birth,
         isFirst: "N",
       };
-      console.log(param);
       this.$gows.callWSOffical("pvt.pip.regquery", param).then((rt) => {
         if (rt.sts == "000000") {
           this.regqueryLists = rt.val.resultList;
