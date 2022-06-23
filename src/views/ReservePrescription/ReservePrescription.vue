@@ -12,18 +12,19 @@
     </nav>
     <div class="mt-3" v-if="clickedMenu === 'reserve'">
       <div class="inputPage w-100" v-if="result === null">
-        <reserve-input-component @update-data="getInputDate"></reserve-input-component>
+        <data-input-component @update-data="getInputDate" :clickedType="clickedMenu"></data-input-component>
       </div>
       <div class="result-wrap" v-else>
-        {{ result }}
           <div>
             <div>
-              病歷號 {{  }}  處方號 {{ result.injNumber }}
+              病歷號 {{ inputData.idOrChart }}  處方號 {{ result.injNumber }}
+            <button class="btn btn-secondary float-end" @click="clickedMenu = 'search'">上一頁</button>
+
             </div>
             <div>
               您的慢性病連續處方箋於 <span class="text-danger">{{ formatDate(result.injDateRange.startDate) }}</span> 由
-              <span class="text-danger">{{ result.deptName }}-{{ result.doctorName}}</span> 開出 <br>
-              最近領藥日為 <span class="text-danger">{{ formatDate(result.injDateRange.startDate) }}</span> 用藥天數為 {} <br>
+              <span class="text-danger">{{ result.deptName }}-{{ result.doctorName}}</span> 開出。<br>
+              最近領藥日為 <span class="text-danger">{{ formatDate(result.injDateRange.startDate) }}</span><br>
               此張慢箋於 <span class="text-danger">{{ formatDate(result.injDueDate) }}</span> 即無效作廢，過此日期則不得領藥，需重新掛號看診。
             </div>
           </div>
@@ -35,8 +36,8 @@
               </option>
             </select>
           </div>
-          <div style="width: 100%; margin: auto">
-            <button class="btn btn-primary">預約</button>
+          <div >
+            <button class="btn btn-primary" @click="reserve()">預約</button>
           </div>
       </div>
     </div>
@@ -44,27 +45,23 @@
         <div class="button-set">
             <button class="btn btn-primary"
                     :class="{'btn-success': openPage === 'inputPage'}"
-                    @click="changePage('inputPage')">
+                    @click="changeFunction('inputPage')">
                 手動輸入資料
             </button>
             <button class="btn btn-primary"
                     :class="{'btn-success': openPage === 'qrcodePage'}"
-                    @click="changePage('qrcodePage')">
+                    @click="changeFunction('qrcodePage')">
                     掃描QRcode
             </button>
         </div>
         <div class="inputPage w-100" v-if="openPage === 'inputPage'">
           <search-input-component :clickedType="clickedMenu" @update-data="getInputDate"></search-input-component>
         </div>
-        <div class="qrcodePage" v-if="openPage === 'qrcodePage'">
+        <div class="result-wrap" v-if="openPage === 'qrcodePage'" style="margin-top:1rem" >
             <p v-if="error" class="text-danger">{{ error }}</p>
             <qrcode-stream :key="_uid" @decode="onDecode" @init="onInit" :track="paintOutline"/>
         </div>
-        <div class="result-wrap">
-          <div v-if="result && result.isSuccess === 'Y'" class="mx-5">
-          <div class="alert alert-success">
-            {{ result.message }}
-          </div>
+        <div class="result-wrap" v-if="injData && filterResult && injData.isSuccess === 'Y' ">
           <table class="table table-bordered">
             <thead>
                 <tr>
@@ -75,7 +72,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="data in this.result.resultList" :key="data.injNumber">
+                <tr v-for="data in filterResult" :key="data.injNumber">
                   <td>{{ data.deptName }}</td>
                   <td>{{ data.injDateRange.startDate }}</td>
                   <td>{{ data.injNumber}}</td>
@@ -86,18 +83,17 @@
                     >
                       {{ data.notice }}
                     </button>
-                    <span v-else>{{ data.notice }}</span>
+                    <span v-else-if="data.notice === '已預約' && data.fvDate != undefined">{{ data.notice }}-{{ formatDate(data.fvDate) }}</span>
                   </td>
                 </tr>
             </tbody>
           </table>
-          </div>
-          <div v-else-if="result && result.isSuccess === 'N'" class="mx-5">
-            <div class="alert alert-danger">
-              {{ result.message }}
-            </div>
-          </div>
         </div>
+    </div>
+    <div class="mt-3" v-if="clickedMenu === 'cancel'">
+      <div class="inputPage w-100" >
+        <data-input-component @update-data="getInputDate" :clickedType="clickedMenu"></data-input-component>
+      </div>
     </div>
   </div>
 </template>
@@ -105,21 +101,23 @@
 <script>
 import { QrcodeStream } from 'vue-qrcode-reader'
 import SearchInputComponent from './SearchInput.vue'
-import ReserveInputComponent from './ReserveInput.vue'
+import DataInputComponent from './DataInput.vue'
 
 export default {
   data () {
     return {
-      qrcodeParam: '',
-      result: '',
+      injData: '',
+      result: null,
       error: '',
       openPage: '',
       clickedMenu: '',
       inputData: {},
-      selectedReserveDate: ''
+      selectedReserveDate: '',
+      reservedData: []
     }
   },
   methods: {
+    // * QR Code render function
     onDecode (result) {
       let error = null
       if (result.includes('sltung')) {
@@ -129,8 +127,12 @@ export default {
             'text': '無病例號'
           }
         } else {
-          this.qrcodeParam = result.split('?')[1].split('&')[0].split('=')[1]
-          this.getResult(this.qrcodeParam)
+          this.inputData = {
+            idOrChart: result.split('?')[1].split('&')[0].split('=')[1],
+            injNumber: result.split('?')[1].split('&')[1].split('=')[1]
+          }
+          this.getInjData(this.inputData.idOrChart, this.inputData.injData)
+          this.clickedMenu = 'reserve'
         }
       } else {
         error = {
@@ -140,16 +142,11 @@ export default {
       }
       if (error != null) {
         this.$swal.fire({
-          icon: 'danger',
+          icon: 'error',
           title: error.title,
           text: error.text
         })
       }
-      this.$swal.fire({
-        icon: 'danger',
-        title: 'test',
-        text: result
-      })
     },
     async onInit (promise) {
       try {
@@ -194,15 +191,22 @@ export default {
       this.clickedMenu = menu
       this.result = null
     },
-    changePage (page) {
+    changeFunction (page) {
       this.openPage = page
-      this.result = null
+      this.injData = null
     },
     getInputDate (val) {
       this.inputData = val
-      this.getResult(this.inputData.idOrChart)
+      if (this.clickedMenu === 'reserve') {
+        this.getInjData(this.inputData.idOrChart, this.inputData.injNumber)
+      } else if (this.clickedMenu === 'search') {
+        this.getInjData(this.inputData.idOrChart)
+        this.getReservedData()
+      } else if (this.clickedMenu === 'cancel') {
+        this.cancelPrescription()
+      }
     },
-    getResult (chart) {
+    getInjData (chart, injNumber, flag) {
       const tag = 'pvt.pip.injdataIA'
       const wsParam = {
         'wb_base64': 0,
@@ -210,8 +214,106 @@ export default {
         'tag': 'pvt.pip.getinjdata'
       }
       this.$gows.callWSOffical(tag, wsParam).then((rt) => {
+        this.injData = null
+        this.result = null
         console.log(rt)
-        this.result = rt.val
+        let alert = {}
+        if (rt.sts === '000000') {
+          if (injNumber === undefined) {
+            this.injData = rt.val
+            alert = {
+              'icon': 'success',
+              'title': '查詢成功',
+              'text': ''
+            }
+          } else {
+            this.injData = rt.val
+            rt.val.resultList.forEach(data => {
+              if (data.injNumber === injNumber) {
+                this.result = data
+                alert = {
+                  'icon': 'success',
+                  'title': '查詢成功',
+                  'text': ''
+                }
+              }
+            })
+            if (this.result === null) {
+              alert = {
+                'icon': 'error',
+                'title': '查無資料',
+                'text': '請再檢查資料是否填寫正確'
+              }
+            }
+          }
+        } else {
+          alert = {
+            'icon': 'error',
+            'title': '查無資料',
+            'text': '請再檢查資料是否填寫正確'
+          }
+        }
+        if (flag === undefined) {
+          this.$swal.fire({
+            icon: alert.icon,
+            title: alert.title,
+            text: alert.text
+          })
+        }
+      })
+    },
+    getReservedData () {
+      const tag = 'pvt.pip.injdataIA'
+      const wsParam = {
+        'wb_base64': 0,
+        'chart': this.inputData.idOrChart,
+        'tag': 'pvt.pip.injdataquery'
+      }
+      this.$gows.callWSOffical(tag, wsParam).then((rt) => {
+        this.reservedData = rt.val
+        console.log(rt)
+      })
+    },
+    cancelPrescription () {
+      const tag = 'pvt.pip.injdataIA'
+      const wsParam = {
+        'wb_base64': 0,
+        'chart': this.inputData.idOrChart,
+        'injNumber': this.inputData.injNumber,
+        'tag': 'pvt.pip.doinjcancel'
+      }
+      this.$gows.callWSOffical(tag, wsParam).then((rt) => {
+        let alert = {}
+        if (rt.sts === '000000') {
+          if (rt.val.isSuccess === 'Y') {
+            alert = {
+              icon: 'success',
+              title: '取消成功',
+              text: ''
+            }
+          } else {
+            alert = {
+              icon: 'error',
+              title: '取消失敗',
+              text: rt.val.message
+            }
+          }
+        } else {
+          alert = {
+            icon: 'error',
+            title: '錯誤',
+            text: rt.msg
+          }
+        }
+        this.$swal.fire({
+          icon: alert.icon,
+          title: alert.title,
+          text: alert.text
+        })
+        this.clickedMenu = 'search'
+        this.getInjData(this.inputData.idOrChart, undefined, 1)
+        this.getReservedData()
+        console.log(rt)
       })
     },
     checkExpiration (expirationDate) {
@@ -232,10 +334,50 @@ export default {
       this.clickedMenu = 'reserve'
       this.result = data
     },
+    reserve () {
+      const tag = 'pvt.pip.injdataIA'
+      const wsParam = {
+        'wb_base64': 0,
+        'chart': this.inputData.idOrChart,
+        'injNumber': this.result.injNumber,
+        'fvDate': this.selectedReserveDate,
+        'doctorID': this.result.doctorID,
+        'deptID': this.result.deptID,
+        'opdDate': this.result.opdDate,
+        'tag': 'pvt.pip.doinj'
+      }
+      this.$gows.callWSOffical(tag, wsParam).then((rt) => {
+        console.log(rt)
+        let alert = {}
+        if (rt.sts === '000000') {
+          if (rt.val.isSuccess === 'Y') {
+            alert = {
+              'icon': 'success',
+              'title': '預約成功',
+              'text': rt.val.message
+            }
+          } else {
+            alert = {
+              'icon': 'error',
+              'title': '預約失敗',
+              'text': rt.val.message
+            }
+          }
+          this.$swal.fire({
+            icon: alert.icon,
+            title: alert.title,
+            text: alert.text
+          })
+          this.clickedMenu = 'search'
+          this.getInjData(this.inputData.idOrChart, undefined, 1)
+          this.getReservedData()
+        }
+      })
+    },
     formatDate (date) {
       let yy = date.substring(0, 4)
-      let mm = date.substring(5, 6)
-      let dd = date.substring(7, 8)
+      let mm = date.substring(4, 6)
+      let dd = date.substring(6, 8)
       return yy + '年' + mm + '月' + dd + '日'
     },
     formatDay (day) {
@@ -264,31 +406,52 @@ export default {
       let list = []
       let temp = {
         'yy': this.result.injDateRange.startDate.substring(0, 4),
-        'mm': (this.result.injDateRange.startDate.substring(5, 6) < 10 ? '0' : '') + (this.result.injDateRange.startDate.substring(5, 6) - 1),
-        'dd': (this.result.injDateRange.startDate.substring(7, 8) < 10 ? '0' : '') + this.result.injDateRange.startDate.substring(7, 8)
+        'mm': (this.result.injDateRange.startDate.substring(4, 6) < 10 ? '0' : '') + (this.result.injDateRange.startDate.substring(4, 6) - 1),
+        'dd': (this.result.injDateRange.startDate.substring(6, 8) < 10 ? '0' : '') + this.result.injDateRange.startDate.substring(6, 8)
       }
       let startDate = new Date(temp.yy, temp.mm, temp.dd)
+      if (startDate < new Date()) {
+        startDate = new Date()
+      }
       let temp2 = {
         'yy': this.result.injDueDate.substring(0, 4),
-        'mm': (this.result.injDueDate.substring(5, 6) < 10 ? '0' : '') + (this.result.injDueDate.substring(5, 6) - 1),
-        'dd': (this.result.injDueDate.substring(7, 8) < 10 ? '0' : '') + this.result.injDueDate.substring(7, 8)
+        'mm': (this.result.injDueDate.substring(4, 6) < 10 ? '0' : '') + (this.result.injDueDate.substring(4, 6) - 1),
+        'dd': (this.result.injDueDate.substring(6, 8) < 10 ? '0' : '') + this.result.injDueDate.substring(6, 8)
       }
       let endDate = new Date(temp2.yy, temp2.mm, temp2.dd)
       const diff = endDate.getTime() - startDate.getTime()
       const diffDate = diff / (24 * 60 * 60 * 1000)
-      console.log(temp, temp2)
-      for (let i = 0; i < diffDate; i++) {
-        let tempDate = new Date(temp.yy, temp.mm, parseInt(temp.dd) + i)
+      for (let i = 0; i <= Math.ceil(diffDate); i++) {
+        let tempDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + i)
         let yy = tempDate.getFullYear()
         let mm = (tempDate.getMonth() < 10 ? '0' : '') + (tempDate.getMonth() + 1)
         let dd = (tempDate.getDate() < 10 ? '0' : '') + tempDate.getDate()
         let day = this.formatDay(tempDate.getDay())
         let obj = {
-          'value': tempDate,
+          'value': yy + mm + dd,
           'text': yy + '年' + mm + '月' + dd + '日' + '(' + day + ')'
         }
         list.push(obj)
       }
+      return list
+    },
+    filterResult () {
+      let list = []
+      if (this.injData.length === 0 || this.reservedData.length === 0) {
+        return list
+      }
+      this.injData.resultList.forEach((element) => {
+        let flag = true
+        this.reservedData.resultList.forEach(data => {
+          if (element.injNumber === data.injNumber) {
+            let temp = element
+            temp['fvDate'] = data.fvDate
+            flag = false
+            list.push(temp)
+          }
+        })
+        if (flag === true) { list.push(element) }
+      })
       console.log(list)
       return list
     }
@@ -296,7 +459,7 @@ export default {
   components: {
     QrcodeStream,
     'search-input-component': SearchInputComponent,
-    'reserve-input-component': ReserveInputComponent
+    'data-input-component': DataInputComponent
   }
 }
 </script>
@@ -317,12 +480,6 @@ export default {
         flex-direction: column;
         align-items: center;
     }
-    .qrcodePage {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
     .menu {
       width: 50%;
       display: flex;
@@ -332,15 +489,26 @@ export default {
       cursor: pointer;
     }
     .result-wrap {
+      border: 1px black solid;
+      border-radius: 1rem;
       width: 60%;
-      margin: auto
+      margin: auto;
+      padding: 2rem;
     }
+
     @media (max-width: 768px) {
       .menu {
         width: 80% !important;
       }
       .result-wrap {
         width: 80% !important;
+      }
+    }
+    @media (max-width: 576px) {
+      .result-wrap > table {
+        width: 90% !important;
+        font-size: 13px;
+        padding :0;
       }
     }
 </style>

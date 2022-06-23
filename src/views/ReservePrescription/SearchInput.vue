@@ -2,9 +2,9 @@
     <div>
         <div class="d-flex flex-column input-data">
             <label for="idOrChart">輸入身分證號或病歷號:</label>
-            <input type="text" id="idOrChart" v-model="inputData.idOrChart">
+            <input type="text" id="idOrChart" v-model="inputData.idOrChart" @keyup.enter="emitInputData()">
             <label>生日</label>
-            <input type="date" v-model="inputData.birthday">
+            <input type="date" v-model="inputData.birthday" @keyup.enter="emitInputData()">
             <button class="btn btn-primary mt-3" @click="emitInputData()">{{buttonName}}</button>
         </div>
     </div>
@@ -23,8 +23,7 @@ export default {
       inputData: {
         idOrChart: '-32',
         birthday: ''
-      },
-      result: []
+      }
     }
   },
   methods: {
