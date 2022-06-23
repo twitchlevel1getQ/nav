@@ -3,9 +3,9 @@
         <div class="d-flex flex-column input-data">
             <label for="idOrChart">輸入身分證號或病歷號:</label>
             <input type="text" id="idOrChart" v-model="inputData.idOrChart">
-            <label>生日</label>
-            <input type="date" v-model="inputData.birthday">
-            <button class="btn btn-primary mt-3" @click="emitInputData()">{{buttonName}}</button>
+            <label for="idOrChart">輸入處方號:</label>
+            <input type="text" id="idOrChart" v-model="inputData.injNumber">
+            <button class="btn btn-primary mt-3" @click="emitInputData()">進行預約</button>
         </div>
     </div>
 </template>
@@ -21,8 +21,8 @@ export default {
   data () {
     return {
       inputData: {
-        idOrChart: '1092789',
-        birthday: ''
+        idOrChart: '-32',
+        injNumber: ''
       },
       result: []
     }
@@ -30,19 +30,6 @@ export default {
   methods: {
     emitInputData () {
       this.$emit('update-data', this.inputData)
-    }
-  },
-  computed: {
-    buttonName () {
-      let returnButtonName = ''
-      if (this.clickedType === 'reserve') {
-        returnButtonName = '預約'
-      } else if (this.clickedType === 'search') {
-        returnButtonName = '查詢'
-      } else if (this.clickedType === 'cancel') {
-        returnButtonName = '取消'
-      }
-      return returnButtonName
     }
   }
 }
