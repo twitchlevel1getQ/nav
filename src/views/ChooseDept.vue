@@ -231,7 +231,7 @@ export default {
             groups.forEach((key, value) => {
               if (key.deptName.includes(this.searchDept)) {
                 arr.push(key);
-                console.log("test", key);
+                console.log("search", key);
                 a = true;
               }
             });
