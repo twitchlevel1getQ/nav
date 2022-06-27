@@ -330,7 +330,6 @@ export default {
       };
       this.$gows.callWSOffical("pvt.pip.getopdprogress", param).then((rt) => {
         if (rt.sts == "000000") {
-          // console.log("getops", rt.val.resultList);
           this.opdprogressEsLists[opdTimdId - 1] = rt.val.resultList;
         } else {
           this.opdprogressEsLists[opdTimdId - 1] = [];
@@ -360,7 +359,6 @@ export default {
         if (opdTimdId == this.deptTime) {
           this.filterLists(opdTimdId);
         }
-        // console.log("PushIntoList：", opdTimdId, rt.val.resultList);
         if (opdTimdId < 3) {
           opdTimdId++;
           this.getopdprogressES(opdTimdId);
