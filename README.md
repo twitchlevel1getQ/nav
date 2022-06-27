@@ -1,4 +1,4 @@
-# consultation_progress
+# consultation_progress(診間進度)
 
 ## Project setup
 ```
