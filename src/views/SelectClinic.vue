@@ -145,12 +145,12 @@
                 <div
                   class="col-3 d-flex align-items-center justify-content-center"
                 >
-                  <button
+                  <!-- <button
                     class="btn btn-success text-nowrap"
                     @click="ToEditRemark(index)"
                   >
                     修改
-                  </button>
+                  </button> -->
                 </div>
               </div>
             </div>
@@ -205,12 +205,12 @@
               <div v-html="item.msg"></div>
             </div>
             <div class="col-3 d-flex align-items-center">
-              <button
+              <!-- <button
                 class="btn btn-success text-nowrap"
                 @click="ToEditRemark(index)"
               >
                 修改
-              </button>
+              </button> -->
             </div>
           </div>
         </div>
