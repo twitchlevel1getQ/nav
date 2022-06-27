@@ -5,7 +5,7 @@
             <input type="text" id="idOrChart" v-model="inputData.idOrChart" @keyup.enter="emitInputData()">
             <label for="idOrChart">輸入處方號:</label>
             <input type="text" id="idOrChart" v-model="inputData.injNumber" @keyup.enter="emitInputData()">
-            <button class="btn btn-primary mt-3" @click="emitInputData()" >進行預約</button>
+            <button class="btn btn-primary mt-3" @click="emitInputData()" >{{ buttonName }}</button>
         </div>
     </div>
 </template>

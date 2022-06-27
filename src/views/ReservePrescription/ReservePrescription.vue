@@ -14,12 +14,11 @@
       <div class="inputPage w-100" v-if="result === null">
         <data-input-component @update-data="getInputDate" :clickedType="clickedMenu"></data-input-component>
       </div>
-      <div class="result-wrap" v-else>
+      <div class="result-wrap" v-else-if="result !== null && result.notice !== '已預約'">
+            <button class="btn btn-secondary" @click="clickedMenu = 'search'">上一頁</button>
           <div>
             <div>
               病歷號 {{ inputData.idOrChart }}  處方號 {{ result.injNumber }}
-            <button class="btn btn-secondary float-end" @click="clickedMenu = 'search'">上一頁</button>
-
             </div>
             <div>
               您的慢性病連續處方箋於 <span class="text-danger">{{ formatDate(result.injDateRange.startDate) }}</span> 由
@@ -36,9 +35,22 @@
               </option>
             </select>
           </div>
-          <div >
-            <button class="btn btn-primary" @click="reserve()">預約</button>
+          <div style="height: 30px">
+            <button class="btn btn-primary float-end" @click="reserve()">預約</button>
           </div>
+
+      </div>
+      <div class="result-wrap" v-else>
+        <div>
+          <div>
+            病歷號 {{ inputData.idOrChart }}  處方號 {{ result.injNumber }}
+          <button class="btn btn-secondary float-end" @click="clickedMenu = 'search'">上一頁</button>
+          </div>
+          <div class="text-danger fs-5">
+            {{ getReservedData(result.injNumber) }}
+            您的慢性病處方箋已經預約於: {{ selectedReserveDate }}
+          </div>
+        </div>
       </div>
     </div>
     <div class="mt-3" v-if="clickedMenu === 'search'">
@@ -131,8 +143,11 @@ export default {
             idOrChart: result.split('?')[1].split('&')[0].split('=')[1],
             injNumber: result.split('?')[1].split('&')[1].split('=')[1]
           }
-          this.getInjData(this.inputData.idOrChart, this.inputData.injData)
+          this.getInjData(this.inputData.idOrChart, this.inputData.injNumber)
+          this.getReservedData()
+          // * 跳轉至預約畫面
           this.clickedMenu = 'reserve'
+          this.openPage = null
         }
       } else {
         error = {
@@ -190,79 +205,111 @@ export default {
     clickMenu (menu) {
       this.clickedMenu = menu
       this.result = null
+      this.selectedReserveDate = ''
     },
     changeFunction (page) {
-      this.openPage = page
-      this.injData = null
+      if (this.openPage === page) {
+        this.openPage = null
+      } else {
+        this.openPage = page
+        this.injData = null
+      }
     },
     getInputDate (val) {
       this.inputData = val
       if (this.clickedMenu === 'reserve') {
-        this.getInjData(this.inputData.idOrChart, this.inputData.injNumber)
+        this.getInjData(this.inputData.idOrChart, this.inputData.injNumber, 1)
       } else if (this.clickedMenu === 'search') {
         this.getInjData(this.inputData.idOrChart)
         this.getReservedData()
       } else if (this.clickedMenu === 'cancel') {
-        this.cancelPrescription()
+        this.cancel()
       }
     },
+
     getInjData (chart, injNumber, flag) {
       const tag = 'pvt.pip.injdataIA'
       const wsParam = {
         'wb_base64': 0,
         'chart': chart,
+        'date': this.inputData.birthday,
         'tag': 'pvt.pip.getinjdata'
       }
-      this.$gows.callWSOffical(tag, wsParam).then((rt) => {
-        this.injData = null
-        this.result = null
-        console.log(rt)
-        let alert = {}
-        if (rt.sts === '000000') {
-          if (injNumber === undefined) {
-            this.injData = rt.val
-            alert = {
-              'icon': 'success',
-              'title': '查詢成功',
-              'text': ''
+      console.log(wsParam)
+      if (flag) {
+        this.$gows.callWSOffical(tag, wsParam).then((rt) => {
+          this.injData = null
+          this.result = null
+          if (rt.sts === '000000') {
+            if (injNumber === undefined) {
+              this.injData = rt.val
+            } else {
+              this.injData = rt.val
+              rt.val.resultList.forEach(data => {
+                if (data.injNumber === injNumber) {
+                  this.result = data
+                }
+              })
             }
-          } else {
-            this.injData = rt.val
-            rt.val.resultList.forEach(data => {
-              if (data.injNumber === injNumber) {
-                this.result = data
+          }
+        })
+      } else {
+        if (wsParam.date.length !== 4) {
+          this.$swal.fire({
+            icon: 'error',
+            title: '缺少輸入',
+            text: '缺少日期'
+          })
+        } else {
+          this.$gows.callWSOffical(tag, wsParam).then((rt) => {
+            this.injData = null
+            this.result = null
+            let alert = {}
+            if (rt.sts === '000000') {
+              if (injNumber === undefined) {
+                this.injData = rt.val
                 alert = {
                   'icon': 'success',
                   'title': '查詢成功',
                   'text': ''
                 }
+              } else {
+                this.injData = rt.val
+                rt.val.resultList.forEach(data => {
+                  if (data.injNumber === injNumber) {
+                    this.result = data
+                    alert = {
+                      'icon': 'success',
+                      'title': '查詢成功',
+                      'text': ''
+                    }
+                  }
+                })
+                if (this.result === null) {
+                  alert = {
+                    'icon': 'error',
+                    'title': '查無資料',
+                    'text': '請再檢查資料是否填寫正確'
+                  }
+                }
               }
-            })
-            if (this.result === null) {
+            } else {
               alert = {
                 'icon': 'error',
                 'title': '查無資料',
-                'text': '請再檢查資料是否填寫正確'
+                'text': rt.msg
               }
             }
-          }
-        } else {
-          alert = {
-            'icon': 'error',
-            'title': '查無資料',
-            'text': '請再檢查資料是否填寫正確'
-          }
-        }
-        if (flag === undefined) {
-          this.$swal.fire({
-            icon: alert.icon,
-            title: alert.title,
-            text: alert.text
+            this.$swal.fire({
+              icon: alert.icon,
+              title: alert.title,
+              text: alert.text
+            })
           })
         }
-      })
+      }
     },
-    getReservedData () {
+    getReservedData (injNumber) {
       const tag = 'pvt.pip.injdataIA'
       const wsParam = {
         'wb_base64': 0,
@@ -270,8 +317,61 @@ export default {
         'tag': 'pvt.pip.injdataquery'
       }
       this.$gows.callWSOffical(tag, wsParam).then((rt) => {
-        this.reservedData = rt.val
-        console.log(rt)
+        if (injNumber !== undefined) {
+          rt.val.resultList.forEach(element => {
+            if (element.injNumber === injNumber) {
+              this.selectedReserveDate = this.formatDate(element.fvDate)
+            }
+          })
+        } else {
+          this.reservedData = rt.val
+        }
+      })
+    },
+    cancel () {
+      const tag = 'pvt.pip.injdataIA'
+      const wsParam = {
+        'wb_base64': 0,
+        'chart': this.inputData.idOrChart,
+        'tag': 'pvt.pip.injdataquery'
+      }
+      let date = null
+      this.$gows.callWSOffical(tag, wsParam).then((rt) => {
+        if (rt.sts === '000000') {
+          if (rt.val.resultList.length === 0) {
+            this.$swal.fire(rt.val.message, '', 'error')
+          } else {
+            if (this.inputData.injNumber !== undefined) {
+              rt.val.resultList.forEach(element => {
+                if (element.injNumber === this.inputData.injNumber) {
+                  date = this.formatDate(element.fvDate)
+                  this.$swal.fire({
+                    title: '確定要取消此次預約嗎?',
+                    text: '預約時間' + date,
+                    showDenyButton: true,
+                    confirmButtonText: '是',
+                    denyButtonText: '否'
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+                      this.cancelPrescription()
+                    }
+                  })
+                }
+              })
+              if (date === null) {
+                this.$swal.fire('尚未預約', '', 'error')
+              }
+            } else {
+              this.reservedData = rt.val
+            }
+          }
+        } else {
+          if (rt.val.message === undefined) {
+            this.$swal.fire(rt.val, '', 'error')
+          } else {
+            this.$swal.fire(rt.val.message, '', 'error')
+          }
+        }
       })
     },
     cancelPrescription () {
@@ -311,9 +411,9 @@ export default {
           text: alert.text
         })
         this.clickedMenu = 'search'
+        this.openPage = null
         this.getInjData(this.inputData.idOrChart, undefined, 1)
         this.getReservedData()
-        console.log(rt)
       })
     },
     checkExpiration (expirationDate) {
@@ -347,7 +447,6 @@ export default {
         'tag': 'pvt.pip.doinj'
       }
       this.$gows.callWSOffical(tag, wsParam).then((rt) => {
-        console.log(rt)
         let alert = {}
         if (rt.sts === '000000') {
           if (rt.val.isSuccess === 'Y') {
@@ -369,6 +468,8 @@ export default {
             text: alert.text
           })
           this.clickedMenu = 'search'
+          this.openPage = null
+          this.selectedReserveDate = ''
           this.getInjData(this.inputData.idOrChart, undefined, 1)
           this.getReservedData()
         }
@@ -452,7 +553,6 @@ export default {
         })
         if (flag === true) { list.push(element) }
       })
-      console.log(list)
       return list
     }
   },
@@ -492,7 +592,7 @@ export default {
       border: 1px black solid;
       border-radius: 1rem;
       width: 60%;
-      margin: auto;
+      margin: 1rem auto;
       padding: 2rem;
     }
 
