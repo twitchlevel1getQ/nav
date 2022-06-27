@@ -188,7 +188,6 @@ export default {
           path: "/SelectClinic",
           query: {
             deptID: deptID,
-            deptName: deptName,
           },
         })
         .catch((err) => {

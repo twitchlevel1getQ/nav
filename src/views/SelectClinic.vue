@@ -236,6 +236,7 @@ export default {
       },
 
       timer: null,
+      timer30: null,
       //!src
       dept: {
         deptID: null,
@@ -274,11 +275,6 @@ export default {
         this.dept.deptID = "";
       } else {
         this.dept.deptID = this.$route.query.deptID;
-      }
-      if (this.$route.query.deptName == null) {
-        this.dept.deptName = null;
-      } else {
-        this.dept.deptName = this.$route.query.deptName;
       }
     },
     //! 現在時間
@@ -353,6 +349,7 @@ export default {
         if (rt.sts == "000000") {
           this.opdprogressEsLists[opdTimdId - 1] = rt.val.resultList;
           this.dept.deptName = rt.val.resultList[0].deptName;
+          console.log("get:", rt.val.resultList);
         } else {
           this.opdprogressEsLists[opdTimdId - 1] = [];
         }
@@ -370,7 +367,7 @@ export default {
 
     //! 每30s重新取得資料
     interval30S() {
-      this.timer = setInterval(() => {
+      this.timer30 = setInterval(() => {
         let hh = new Date().getHours();
         let now = null;
         if (hh < 12) {
@@ -460,7 +457,7 @@ export default {
           this.$router.push({
             path: "/EditRemark",
             query: {
-              deptID: key.deptID,
+              // deptID: key.deptID,
               roomID: key.roomID,
               period: key.opdTimeID,
               date: this.today.date,
@@ -477,6 +474,7 @@ export default {
   },
   beforeDestroy() {
     clearInterval(this.timer);
+    clearInterval(this.timer30);
   },
   computed: {},
 };

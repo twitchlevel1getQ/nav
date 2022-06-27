@@ -3,12 +3,14 @@
     <loading :active.sync="isLoading"> </loading>
     <div class="inputList pb-2">
       <div class="text-nowrap">
-        <label>日期： <input type="date" v-model="search.date" /></label>
+        <label
+          >日期： <input type="date" v-model="search.date" disabled="disabled"
+        /></label>
       </div>
       <div>
         <label>
           時段：
-          <select v-model="search.period">
+          <select v-model="search.period" disabled="disabled">
             <option
               v-for="(item, index) in timeLists.period"
               :value="index"
@@ -22,16 +24,19 @@
       <div>
         <label
           >科別：
-          <input list="group" v-model="search.groupName" style="width: 200px"
+          <input
+            v-model="search.inputDept"
+            style="width: 200px"
+            disabled="disabled"
         /></label>
-        <datalist id="group">
+        <!-- <datalist id="group">
           <option v-for="(item, index) in deptNameList" :key="index">
             {{ item }}
           </option>
-        </datalist>
+        </datalist> -->
       </div>
-      <div>
-        <!-- <label
+      <!-- <div>
+        <label
           >診間：
           <input
             list="depts"
@@ -47,9 +52,9 @@
           >
             {{ item.deptName }}
           </option></datalist
-        > -->
-      </div>
-      <select v-model="search.roomID">
+        >
+      </div> -->
+      <!-- <select v-model="search.roomID">
         <option
           value=""
           v-for="item in opdprogressEsLists"
@@ -57,8 +62,13 @@
         >
           ({{ item.roomName }}) {{ item.doctorName }}
         </option>
-      </select>
-      <button class="btn btn-toShowClinic" @click="getOoormd()">搜尋</button>
+      </select> -->
+      <div>
+        <label
+          >診間：
+          <input type="text" disabled="disabled" v-model="search.inputRoomName"
+        /></label>
+      </div>
     </div>
     <div class="m-2">
       <ckeditor
@@ -83,13 +93,14 @@ export default {
     return {
       isLoading: false,
       search: {
-        groupID: null,
         groupName: null,
         period: null, //時段 1 2 3
         deptName: null,
         deptID: null,
         roomID: null,
         date: null,
+        inputDept: null,
+        inputRoomName: null,
       },
       timeLists: {
         period: {
@@ -159,21 +170,11 @@ export default {
     this.search.date = this.$route.query.date;
     this.search.period = this.$route.query.period;
     this.search.roomID = this.$route.query.roomID;
-    this.search.deptID = this.$route.query.deptID;
     this.getDeptList();
     this.getTime();
     this.getopdprogress();
   },
   methods: {
-    dis() {
-      if (this.search.groupName == null || this.search.groupName == "") {
-        return true;
-      } else {
-        if (this.pageGroupIndex == null || this.search.groupName == "")
-          return true;
-        else return false;
-      }
-    },
     getTime() {
       let year = new Date().getFullYear();
       let month =
@@ -218,16 +219,9 @@ export default {
             this.deptIDList.forEach((key, value) => {
               if (key == this.$route.query.deptID)
                 this.search.groupName = this.deptNameList[value];
-              // console.log(
-              //   "this.$route.query.deptID;",
-              //   this.$route.query.deptID,
-              //   this.groupName,
-              //   value
-              // );
             });
             this.routedept == true;
           }
-          //   this.getOoormd();
         }
       });
     },
@@ -290,15 +284,23 @@ export default {
       let param = {
         hospitalID: "1",
         language: "zh-TW",
-        deptID: this.search.deptID,
+        deptID: "",
         opdTimeID: this.search.period,
         wb_base64: "0",
         authKey: "F3E1E3E0BAE66D222337314292FD0608",
       };
-      //   console.log("getopdprogress", param);
       this.$gows.callWSOffical("pvt.pip.getopdprogress", param).then((rt) => {
         if (rt.sts == "000000") {
           this.opdprogressEsLists = rt.val.resultList;
+          this.opdprogressEsLists.forEach((key, value) => {
+            if (key.roomID == this.search.roomID) {
+              this.search.deptID = key.deptID;
+              this.search.deptName = key.deptName;
+              this.search.inputDept = "(" + key.deptID + ")" + key.deptName;
+              this.search.inputRoomName =
+                key.roomID + "(" + key.roomName + ")" + key.doctorName;
+            }
+          });
         } else {
         }
         this.isLoading = false;
@@ -308,17 +310,6 @@ export default {
   },
   computed: {},
   watch: {
-    "search.groupName": function () {
-      this.editorData = "";
-      this.deptNameList.forEach((key, value) => {
-        if (key == this.search.groupName) {
-          this.search.deptID = this.deptIDList[value];
-          this.isLoading = true;
-          this.getopdprogress();
-          // console.log("search.groupName", key, value);
-        }
-      });
-    },
     "search.roomID": function () {
       this.getOoormd();
     },
