@@ -70,28 +70,56 @@
         /></label>
       </div>
     </div>
-    <div class="m-2">
+    <!-- <div class="m-2">
       <ckeditor
         :editor="editor"
         v-model="editorData"
-        :editorConfig="editorConfig"
+        :config="editorConfig"
       ></ckeditor>
+    </div> -->
+    <div style="border: 1px solid #ccc;">
+        <Toolbar
+            style="border-bottom: 1px solid #ccc"
+            :editor="editor"
+            :defaultConfig="toolbarConfig"
+            :mode="mode"
+        />
+        <Editor
+            style="height: 500px; overflow-y: hidden;"
+            v-model="editorData"
+            :defaultConfig="editorConfig"
+            :mode="mode"
+            @onCreated="onCreated"
+        />
     </div>
     <div style="text-align: center">
-      <button class="btn btn-blue" @click="updOoormd()">上傳</button>
+      <button class="btn btn-blue" @click="updOoormd()">儲存</button>
     </div>
   </div>
 </template>
 <script>
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import Vue from "vue";
+// import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+// import CKEditor from "@ckeditor/ckeditor5-vue";
+// import DecoupledEditor from "@ckeditor/ckeditor5-build-decoupled-document";
+// import "@ckeditor/ckeditor5-build-decoupled-document/build/translations/zh";
+import { Editor, Toolbar } from '@wangeditor/editor-for-vue';
 import Loading from "vue-loading-overlay";
 import "vue-loading-overlay/dist/vue-loading.css";
+import Vue from "vue";
+
 Vue.component("loading", Loading);
 export default {
+  components: { Editor, Toolbar },
+
   data() {
     return {
+      editor: null,
+      html: '<p>hello</p>',
+      toolbarConfig: { },
+      editorConfig: { placeholder: '请输入内容...' },
+      mode: 'default', // or 'simple'  
       isLoading: false,
+
       search: {
         groupName: null,
         period: null, //時段 1 2 3
@@ -116,44 +144,53 @@ export default {
         rtp: "28298",
         rtd: null,
       },
-      editor: ClassicEditor,
+      // editor: DecoupledEditor,
       editorData: "",
-      editorConfig: {
-        toolbar: {
-          items: [
-            "heading",
-            "|",
-            "bold",
-            "italic",
-            "bulletedList",
-            "numberedList",
-            "blockQuote",
-            "undo",
-            "redo",
-          ],
-        },
-        test: {
-          options: [
-            {
-              model: "paragraph",
-              title: "Paragraph",
-              class: "ck-heading_paragraph",
-            },
-            {
-              model: "a",
-              view: "h2",
-              title: "a 1",
-              class: "ck-heading_heading1",
-            },
-            {
-              model: "heading2",
-              view: "h3",
-              title: "Heading 2",
-              class: "ck-heading_heading2",
-            },
-          ],
-        },
-      },
+      // editorConfig: {
+      //   language: "zh-tw",
+      //   toolbar: {
+      //     items: [
+      //       "heading",
+      //       "|",
+      //       "bold",
+      //       "fontFamily",
+      //       "italic",
+      //       "bulletedList",
+      //       "numberedList",
+      //       "blockQuote",
+      //       "undo",
+      //       "redo",
+      //     ],
+      //   },
+      //   fontFamily: {
+      //       options: [
+      //           'default',
+      //           'Ubuntu, Arial, sans-serif',
+      //           'Ubuntu Mono, Courier New, Courier, monospace'
+      //       ]
+      //   },
+      //   test: {
+      //     options: [
+      //       {
+      //         model: "paragraph",
+      //         title: "Paragraph",
+      //         class: "ck-heading_paragraph",
+      //       },
+      //       {
+      //         model: "a",
+      //         view: "h2",
+      //         title: "a 1",
+      //         class: "ck-heading_heading1",
+      //       },
+      //       {
+      //         model: "heading2",
+      //         view: "h3",
+      //         title: "Heading 2",
+      //         class: "ck-heading_heading2",
+      //       },
+      //     ],
+      //   },
+      // },
       routedept: false,
       editorDisabled: false,
       deptIDList: [],
@@ -174,7 +211,15 @@ export default {
     this.getTime();
     this.getopdprogress();
   },
+  beforeDestroy() {
+        const editor = this.editor
+        if (editor == null) return
+        editor.destroy() // 组件销毁时，及时销毁编辑器
+  },
   methods: {
+    onCreated(editor) {
+            this.editor = Object.seal(editor) // 一定要用 Object.seal() ，否则会报错
+        },
     getTime() {
       let year = new Date().getFullYear();
       let month =
@@ -316,3 +361,18 @@ export default {
   },
 };
 </script>
+<style src="@wangeditor/editor/dist/css/style.css"></style>
+
+<!-- 
+<style lang="scss">
+/* 全局修改生效 */
+#ck-editer {
+  // 编辑器高度，边框
+  .ck-content {
+    min-height: 400px;
+    border: 1px solid #ccc !important;
+    
+    background-color: white;
+  }
+}
+</style> -->

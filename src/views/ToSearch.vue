@@ -13,9 +13,9 @@
     <div class="d-flex justify-content-center">
       <div class="img d-flex justify-content-start w-60">
         <div class="context-item color2" @click="jumpPage('/ChooseDept')">
-          <p>門診查詢</p>
+          <p>科別查詢</p>
         </div>
-        <div class="context-item color1" @click="jumpPage('/Registed')">
+        <div class="context-item color2" @click="jumpPage('/Registed')">
           <p>掛號查詢</p>
         </div>
         <div class="context-item-empty"></div>

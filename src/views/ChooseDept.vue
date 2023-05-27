@@ -2,6 +2,12 @@
   <div class="home">
     <loading :active.sync="isLoading"> </loading>
     <!-- //! head start -->
+    <div class="logo"></div>
+    <div class="bigtitle">
+      <div class="bigtitle-font">
+        門診看診進度
+      </div>  
+    </div>
     <div
       style="
         padding: 10px 10px 0px 10px;
@@ -10,15 +16,12 @@
       "
     >
       <button
-        class="btn btn-unactive btn-toShowClinic"
-        @click="jumpPage('/')"
+        class="rollback"
+        @click="jumpPage('/Navigator')"
         v-if="this.$store.state.area != 0"
       >
         回首頁
       </button>
-      <div>
-        <h1 class="title">門診看診進度</h1>
-      </div>
       <div class="input-group mb-1">
         <input
           type="text"
@@ -45,10 +48,97 @@
     </div>
     <!-- //! head end -->
 
+ <!-- //! container start -->
+    <!-- <div class="outpatient-section">
+    <ul class="page-list">
+        <div>
+          <li class="row-title">
+            <div class="title-left">
+              <font-awesome-icon icon="fa-solid fa-bookmark" />
+              <span class="kind">主科</span>
+            </div>
+          </li>
+          <li class="row-p1" 
+          v-for="(group, inx) in maindept"
+          >
+            <div
+              @click="
+                openDept(
+                  group.group,
+                  group.groupName,
+                  inx,
+                  group.group,
+                  group.groupName,
+                )
+              "
+            >
+              {{ group.groupName }}
+            </div>
+          </li>
+          <li class="row-p1" 
+          v-for="(group, inx) in getdeptList"
+          v-if="checkmaindept(group.deptID,group.deptGroupID) > '-1'"
+          >
+            <div
+              @click="
+                openDept(
+                  group.deptID,
+                  group.deptGroupName,
+                  inx,
+                  group.deptID,
+                  group.deptGroupName
+                )
+              "
+            >
+              {{ group.deptName }}
+            </div>
+          </li>
+        </div>
+      </ul>
+    </div> -->
+    <!-- //! container end -->
     <!-- //! container start -->
+    <!-- {{pageGroup}} -->
     <div
       class="outpatient-section"
+      v-for="(data, index) in rgdsmList"
+      :key="index"
+    >
+      <ul class="page-list">
+        <div>
+          <li class="row-title">
+            <div class="title-left">
+              <font-awesome-icon icon="fa-solid fa-bookmark" />
+              <span class="kind">{{ index }}</span>
+            </div>
+          </li>
+          <li class="row-p1" v-for="(group, inx) in rgdsmList[index]">
+            <!-- {{group}}
+            {{inx}} -->
+            <div
+              @click="
+                openDept(
+                  index,
+                  index,
+                  inx,
+                  rgdsmList[index][inx].div_no,
+                  rgdsmList[index][inx].nam,
+                )
+              "
+            >
+              {{ rgdsmList[index][inx].nam }}
+            </div>
+          </li>
+        </div>
+      </ul>
+    </div>
+    <!-- //! container end -->
+    <!-- {{pageGroup}} -->
+    <!-- <div
+      class="outpatient-section"
       v-for="(title, index) in pageGroup.deptGroupName"
+      v-if=" checkgroupID(pageGroup.deptGroupID[index]) > '-1'"
+      :key="index"
     >
       <ul class="page-list">
         <div>
@@ -62,8 +152,8 @@
             <div
               @click="
                 openDept(
-                  title,
                   pageGroup.deptGroupID[index],
+                  title,
                   inx,
                   group.deptID,
                   group.deptName
@@ -75,7 +165,7 @@
           </li>
         </div>
       </ul>
-    </div>
+    </div> -->
     <!-- //! container end -->
   </div>
 </template>
@@ -85,6 +175,10 @@ export default {
   data() {
     return {
       isLoading: false,
+      
+      // maindept: {320:320, 270:270, 350:350, 330:330, 340:340, 360:360, 310:310, 411:411, 500:500, 380:380, 253:253, 370:370, 300:300, 110:110, 218:218},
+      maindept: {"100":{"group": "100", "groupName": "內科" }, "200":{ "group": "200", "groupName": "外科" }, "300":{ "group": "300", "groupName": "口腔醫學部" }},
+      rgdsmList: [], //取得科別階層
       getdeptList: [], //!getapi所有資料
       //! 篩選後資料
       pageGroup: {
@@ -101,10 +195,27 @@ export default {
   },
   mounted() {
     this.getDeptList();
-    this.getTime();
+    this.getrgdsmList();
+    this.getTime()
+    this.interval1S();
+
   },
   methods: {
     //! 取得時間
+    interval1S() {
+      this.timer = setInterval(() => {
+        let hh = new Date().getHours();
+        let now = null;
+        if (hh < 12) {
+          now = 1;
+        } else if (hh >= 12 && hh <= 17) {
+          now = 2;
+        } else if (hh > 17) {
+          now = 3;
+        }
+        this.getTime();
+      }, 1000 * 1);
+    },
     getTime() {
       let year = new Date().getFullYear();
       let month =
@@ -131,6 +242,26 @@ export default {
       this.today.time = hh + ":" + mf + ":" + ss;
     },
     //!取得所有診間資料
+    getrgdsmList() {
+      this.isLoading = true;
+      let param = {
+        wb_base64: "0",
+        wb_big5: "0",
+        sd_frm_no: "1",
+        lang:this.$store.state.language,
+        authKey:
+          "c81f94f568031f7157a0f7424be40c1ec81f94f568031f7157a0f7424be40c1e",
+      };
+      this.$gows.callWSOffical("evt.rg.getrgdsm", param).then((rt) => {
+        if (rt.sts == "000000") {
+          this.rgdsmList = rt.val;
+          console.log(this.rgdsmLis)
+        }
+        // this.tidy();
+        this.isLoading = false;
+      });
+    },   
+    //!取得所有診間資料
     getDeptList() {
       this.isLoading = true;
       let param = {
@@ -145,7 +276,7 @@ export default {
       this.$gows.callWSOffical("pvt.pip.getdept", param).then((rt) => {
         if (rt.sts == "000000") {
           this.getdeptList = rt.val.resultList;
-          console.log("getDeptList", this.getdeptList);
+          // console.log("getDeptList", this.getdeptList);
         }
         this.tidy();
         this.isLoading = false;
@@ -179,6 +310,26 @@ export default {
             this.pageGroup.groups[inx].push(obj);
           }
         });
+        console.log(this.pageGroup)
+    },
+    checkmaindept(id,dept)
+    {
+      
+      var maindept = ['320', '270', '350', '330', '340', '360', '310', '411', '500', '380', '253', '370', '300', '110', '218'];
+      if (maindept.indexOf(id) > '-1') {
+        if (id == dept) {
+          return 1;
+        } 
+      }
+      return -1; // -1
+
+    },  checkgroupID(id)
+    {
+      var idlist = [100, 200,];
+      // console.log(id)
+      // console.log(idlist.indexOf(id))
+      return idlist.indexOf(id); // -1
+
     },
     //! 跳SelectClinic
     openDept(groupID, groupName, inx, deptID, deptName) {
@@ -188,6 +339,8 @@ export default {
           path: "/SelectClinic",
           query: {
             deptID: deptID,
+            groupID: groupID,
+            groupName: deptName,
           },
         })
         .catch((err) => {

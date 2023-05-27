@@ -18,23 +18,32 @@
       </button>
       <button
         class="btn btn-unactive btn-toShowClinic"
-        @click="jumpPage('/')"
+        @click="jumpPage('/Navigator')"
         v-if="this.$store.state.area != 0"
       >
         回首頁
       </button>
       <div class="title">
         <div class="title-deptname">門診看診進度</div>
-        <div v-if="dept.deptName != null" class="rwdTitle">
+        <div v-if="title != null" class="rwdTitle">
+          <p style="display: inline-block; margin: 0px">-</p>
+          {{ title }}
+        </div>
+        <div v-if="title != null" class="rwdTitle2">
+          <p style="display: inline-block; margin: 0px"></p>
+          {{ title }}
+        </div>
+          <div v-if="title == ''" class="rwdTitle">
           <p style="display: inline-block; margin: 0px">-</p>
           {{ dept.deptName }}
         </div>
-        <div v-if="dept.deptName != null" class="rwdTitle2">
-          <p style="display: inline-block; margin: 0px"></p>
-          {{ dept.deptName }}
-        </div>
+        
+        
       </div>
     </div>
+
+
+    
     <div style="padding: 0px 10px 0px 10px">
       <div class="date">
         <span class="date-left">
@@ -43,11 +52,11 @@
             <span style="color: #ff3434">{{ today.time }}</span></span
           >
         </span>
-        <span class="date-right" v-if="dept.deptName !== null">
+        <span class="date-right" v-if="dept.deptID != 201">
           *每30秒自動刷新
         </span>
       </div>
-      <div class="buttons" v-if="dept.deptName != null">
+      <div class="buttons" v-if="dept.deptID != 201">
         <button
           :class="{ isactive: isbtn == 0 }"
           class="btn btn-unactive btn-toShowClinic"
@@ -81,15 +90,72 @@
     <!-- //! header end -->
 
     <!-- //! container start -->
+
+    <div >
+      <div >
+
+        <div class="date-right" >
+        <!-- {{rgdsmList[dept.deptID][title]}} -->
+        <div
+      class="outpatient-section"
+      v-for="(data, index) in rgdsmList"
+      :key="index"
+    >
+      <ul class="page-list">
+        <div>
+          <li class="row-title">
+            <div class="title-left">
+              <font-awesome-icon icon="fa-solid fa-bookmark" />
+              <span class="kind">{{ title }}</span>
+            </div>
+          </li>
+          <div class="row-p1" v-for="(group, inx) in rgdsmList[dept.deptID][title]">
+            <!-- {{group}}
+            {{inx}} -->
+            <div
+              @click="
+                openDept(
+                  index,
+                  index,
+                  inx,
+                  rgdsmList[dept.deptID][title][inx].div_no,
+                  rgdsmList[dept.deptID][title][inx].nam,
+                )
+              "
+            >
+              {{ rgdsmList[dept.deptID][title][inx].nam }}
+            </div>
+          </div>
+        </div>
+      </ul>
+    </div> 
+        </div>
+      </div>
+    </div>
+
+
+    
     <div style="text-align: center">
-      <h1
+        <h1 v-if="title == '口腔醫學部'" 
+        style="font-weight: 600; font-size: 30px; margin: 0px 20px">
+            口腔醫學部採約診制，將由專人與您確認看診時段，以避免浪費您寶貴的時間。如有疑義，歡迎來電洽詢，電話：(04)2658-1919 #55301。
+          </h1>
+        <h1
         style="font-weight: 600; font-size: 30px; margin: 0px 20px"
-        v-if="isTable == false"
+        v-if="matchState()" 
       >
         {{ dept.deptTim_zh }}{{ dept.deptName }}
         <p style="color: red; display: inline-block">目前無看診資料</p>
+      </h1>  
+      <h1
+        style="font-weight: 600; font-size: 30px; margin: 0px 20px"
+        v-if="resmessage != ''" 
+      >
+        <!-- <p style="color: red; display: inline-block">{{resmessage}}</p> -->
       </h1>
-
+       <!-- {{dept}} -->
+      <!-- {{rgdsmList[dept.deptID][title]}}  -->
+      <!-- {{opdprogressEsLists}} -->
       <!-- //! rwd 大裝置  -->
       <div class="clinic-info-lg" v-if="isTable == true">
         <div class="row clinic-info-bg" style="">
@@ -215,9 +281,9 @@
           </div>
         </div>
       </div>
+      </div>
     </div>
     <!-- //! container end -->
-  </div>
 </template>
 <script>
 import Vue from "vue";
@@ -228,6 +294,7 @@ Vue.component("loading", Loading);
 export default {
   data() {
     return {
+      rgdsmList:[],
       isLoading: false,
       isbtn: null,
       dept: {
@@ -248,22 +315,55 @@ export default {
         time: null,
         date: null,
       },
+      title: '',
       deptTime: null, //! 上午下午晚上
       lists: [], //! 存放看診資料
       isTable: true,
       opdprogressEsLists: [[], [], []], //! 存放看診資料
+      resmessage: '',//回傳訊息
+      divdrlist: {},
     };
   },
   mounted() {
     this.reSetProgressLists();
     this.set();
+    this.getopdprogress();
     this.getTime();
     this.getopdprogressES(1);
     this.interval30S();
     this.interval1S();
     this.setButton();
+    // this.getrgdsmList();
+
   },
   methods: {
+    openDept(groupID, groupName, inx, deptID, deptName) {
+      console.log("opendept", groupName, groupID, deptID, deptName);
+      this.$router
+        .push({
+          path: "/SelectClinic",
+          query: {
+            deptID: deptID,
+            groupID: groupID,
+            groupName: deptName,
+          },
+        })
+        .catch((err) => {
+          err;
+        });
+        this.filterLists(this.isbtn,353);
+        this.getopdprogress();
+    },
+    matchState() {
+      let res = false;
+      if (this.isTable == false) {
+        res = true;
+      }
+      if (this.$route.query.deptID == 201) { 
+        res = false;
+      }
+      return res
+    },
     //! 重置
     reSetProgressLists() {
       this.opdprogressEsLists = [[], [], []];
@@ -276,6 +376,15 @@ export default {
       } else {
         this.dept.deptID = this.$route.query.deptID;
       }
+      if (this.$route.query.groupName == null) {
+        this.title = "";
+        } else {
+        this.title =  this.$route.query.groupName
+        }
+        if (this.$route.query.groupID == '300') {
+          this.isTable = true
+        }
+      console.log(this.$route.query)
     },
     //! 現在時間
     getTime() {
@@ -316,10 +425,23 @@ export default {
 
     //!取得診間資料
     getopdprogress(opdTimdId) {
+      let hh = new Date().getHours();
+      let now = null;
+      if (hh < 12) {
+        now = 1;
+      } else if (hh >= 12 && hh <= 17) {
+        now = 2;
+      } else if (hh > 17) {
+        now = 3;
+      } 
+      if (!opdTimdId) {
+        opdTimdId = now;
+      }
       let param = {
         hospitalID: "1",
         language: "zh-TW",
-        deptID: this.dept.deptID,
+        // deptID: this.dept.deptID,
+        deptID: this.$route.query.deptID,
         opdTimeID: opdTimdId,
         wb_base64: "0",
         authKey: "F3E1E3E0BAE66D222337314292FD0608",
@@ -327,11 +449,19 @@ export default {
       this.$gows.callWSOffical("pvt.pip.getopdprogress", param).then((rt) => {
         if (rt.sts == "000000") {
           this.opdprogressEsLists[opdTimdId - 1] = rt.val.resultList;
+          console.log("378:", opdTimdId);
+          console.log("378:", rt.val.resultList);
+          console.log("378:", this.opdprogressEsLists[opdTimdId - 1]);
+          this.filterLists(this.isbtn,381);
         } else {
           this.opdprogressEsLists[opdTimdId - 1] = [];
+          console.log("381:", opdTimdId);
+          this.filterLists(this.isbtn,385);
+
         }
-        this.filterLists(this.isbtn);
+        // this.filterLists(this.isbtn);
         console.log("every30sec getopdprogress:", rt.val);
+        console.log("param:", param);
       });
     },
     //!取得全部資料
@@ -346,15 +476,15 @@ export default {
       };
       this.isLoading = true;
       this.$gows.callWSOffical("pvt.pip.getopdprogress", param).then((rt) => {
-        if (rt.sts == "000000") {
+        if (rt.sts == "000000" && rt.val.resultList.length > 1) {
           this.opdprogressEsLists[opdTimdId - 1] = rt.val.resultList;
           this.dept.deptName = rt.val.resultList[0].deptName;
-          console.log("get:", rt.val.resultList);
+          // console.log("get:", rt.val.resultList);
         } else {
           this.opdprogressEsLists[opdTimdId - 1] = [];
         }
         if (opdTimdId == this.deptTime) {
-          this.filterLists(opdTimdId);
+          // this.filterLists(opdTimdId,413);
         }
         if (opdTimdId < 3) {
           opdTimdId++;
@@ -362,9 +492,49 @@ export default {
         } else {
           this.isLoading = false;
         }
+        if (rt.val.message != '成功') {
+          this.resmessage = rt.val.message;
+        }
       });
     },
+    getrgdsmList() {
+      //先呼叫測試區
+      this.isLoading = true;
+      let param = {
+        wb_base64: "0",
+        wb_big5: "0",
+        sd_frm_no: "0",
+        div_no: this.dept.deptID,
+        lang:this.$store.state.language,
+        authKey:
+          "c81f94f568031f7157a0f7424be40c1ec81f94f568031f7157a0f7424be40c1e",
+      };
+      this.$gows.callWSOffical2("evt.rg.getrgdsm", param).then((rt) => {
+        if (rt.sts == "000000") {
+          this.rgdsmList = rt.val;
+          console.log(this.rgdsmList)
+          console.log(this.rgdsmList[this.$route.query.deptID][this.$route.query.groupName])
+          let datalist = this.rgdsmList[this.$route.query.deptID][this.$route.query.groupName];
+          console.log(datalist);
+          datalist.forEach((item) => {
+            // console.log(item); // { name: 'Casper', ... }
+            if (item.message.length > 0) {
+              alert(item.message[0].dsc)
+            }
+            if (item.dr.length > 0) {
 
+              console.log(item.dr)
+              console.log(item.div_no)
+              this.divdrlist[item.div_no] = item.dr 
+            }
+          });
+          console.log(item.divdrlist)
+        }
+        
+        // this.tidy();
+        this.isLoading = false;
+      });
+    }, 
     //! 每30s重新取得資料
     interval30S() {
       this.timer30 = setInterval(() => {
@@ -395,9 +565,9 @@ export default {
       }, 1000 * 1);
     },
     //! 顯示資料
-    filterLists(value) {
+    filterLists(value,log) {
+      let arr = [];
       if (value == 0) {
-        let arr = [];
         Object.values(this.opdprogressEsLists[0]).forEach((value) => {
           arr.push(value);
         });
@@ -411,11 +581,23 @@ export default {
       } else {
         this.lists = this.opdprogressEsLists[value - 1];
       }
+      console.log('490',log)
+      console.log('491',value)
+      console.log('492',this.lists)
+      console.log('493',arr)
+      console.log('494',this.opdprogressEsLists[value - 1])
+      console.log('495',this.lists.length)
       if (this.lists.length == 0) {
         this.isTable = false;
+        if (this.$route.query.groupID == '300') {
+          this.isTable = true;
+        }
       } else {
         this.isTable = true;
       }
+      // if (this.$route.query.deptID == '201') {
+      //   this.isTable = false;
+      // }
     },
     filterTime(time) {
       if (time == 1) return "上午";
@@ -449,7 +631,7 @@ export default {
       if (index == 3) {
         this.dept.deptTim_zh = "晚上";
       }
-      this.filterLists(index);
+      this.filterLists(index,'537');
     },
     ToEditRemark(index) {
       this.lists.forEach((key, value) => {

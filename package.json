@@ -9,7 +9,9 @@
   },
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^34.1.0",
+    "@ckeditor/ckeditor5-build-decoupled-document": "^35.3.2",
     "@ckeditor/ckeditor5-language": "^34.1.0",
+    "@ckeditor/ckeditor5-vue": "^4.0.1",
     "@ckeditor/ckeditor5-vue2": "^3.0.1",
     "@fortawesome/fontawesome-free": "^6.1.1",
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
@@ -17,6 +19,8 @@
     "@fortawesome/free-solid-svg-icons": "^6.1.1",
     "@fortawesome/vue-fontawesome": "^2.0.6",
     "@popperjs/core": "^2.11.5",
+    "@wangeditor/editor": "^5.1.23",
+    "@wangeditor/editor-for-vue": "^1.0.2",
     "axios": "^0.27.2",
     "core-js": "^2.6.12",
     "install": "^0.13.0",
@@ -24,10 +28,13 @@
     "npm": "^8.12.1",
     "vue": "^2.6.10",
     "vue-axios": "^3.4.1",
+    "vue-barcode-reader": "^1.0.2",
+    "vue-directive-touch": "^1.0.28",
     "vue-loading-overlay": "^3.4.2",
     "vue-qrcode-reader": "^3.1.0",
     "vue-router": "^3.0.3",
     "vue-sweetalert2": "^5.0.5",
+    "vue2-touch-events": "^3.2.2",
     "vuex": "^3.0.1"
   },
   "devDependencies": {

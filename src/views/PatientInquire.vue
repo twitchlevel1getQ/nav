@@ -1,7 +1,7 @@
 <template>
   <div>
     患者查詢
-    <button class="btn btn-unactive btn-toShowClinic" @click="jumpPage('/')">
+    <button class="btn btn-unactive btn-toShowClinic" @click="jumpPage('/Navigator')">
       回首頁
     </button>
   </div>

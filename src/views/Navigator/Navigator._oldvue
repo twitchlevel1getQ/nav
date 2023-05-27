@@ -1,0 +1,285 @@
+<template>
+    <div class='bg' style="width: 100%;" v-touch:swipe="swipeHandler(1)" v-touch:swipe.left="swipeHandler(2)">
+      <div class="logo-img">
+        
+      </div>
+      <div class="nav">
+            <div class="inner-width">
+                <ul>
+
+                    <li class="desk-show" @click="changelanguage('zh-tw')"><a title="繁中"><span>繁</span></a></li>
+                    <li class="desk-show" @click="changelanguage('CN')"><a title="简中"><span>简</span></a></li>
+                    <li class="desk-show" @click="changelanguage('EN')"><a title="EN"><span>EN</span></a></li>
+                </ul>
+            </div>
+        </div>
+      <div class="containerbox">
+        <div class="rgpage-box"> 
+          <div class="rgpage-img">
+          </div>
+          <div class="rgpage-font">
+            掛號查詢
+          </div>
+        </div>   
+        <div class="rgpage-box2"> 
+          <div class="box2-img">
+          </div>
+          <div class="rgpage-font">
+            門診掛號
+          </div>
+        </div>   
+      </div>
+      <div class="containerbox">
+        <div class="rgpage-box3"> 
+          <div class="box3-img">
+          </div>
+          <div class="box3-font">
+            慢籤領藥
+          </div>
+        </div>   
+        <div class="rgpage-box4"> 
+          <div class="box4-img">
+          </div>
+          <div class="rgpage-font">
+            看診進度
+          </div>
+        </div>   
+        <div class="rgpage-box5"> 
+          <div class="box5-img">
+          </div>
+          <div class="rgpage-font">
+            該看哪科
+          </div>
+        </div>   
+      </div>
+
+
+
+
+
+  
+      <!-- <div  class="d-flex justify-content-center" style="margin: 15px;top:40px;position: relative;">
+          <div class="context-box color1" 
+          @click="jumpPage('/rgpage')">
+            <p>我要掛號</p>
+          </div>
+          <div
+            class="context-box color1"
+            @click="jumpPage('/rgrecord')"
+          >
+            <p>掛號紀錄</p>
+          </div>  
+          <div
+            class="context-box color1"
+            @click="jumpPage('/rgquery')"
+          >
+            <p>掛號查詢</p>
+          </div>
+        </div>
+        <div class="d-flex justify-content-center" style="margin: 15px;top:20px;position: relative;">
+          <div class="context-box color1" 
+          @click="jumpPage('/ReservePrescription')">
+            <p>慢籤預約</p>
+          </div>
+          <div
+            class="context-box color1"
+            @click="jumpPage('/ChooseDept')"
+          >
+            <p>各項進度</p>
+          </div>  
+          <div
+            class="context-box color1"
+            @click="jumpPage('/pay')"
+          >
+            <p>醫療繳費</p>
+          </div>
+        </div> -->
+      </div>
+    </div>
+  </template>
+  <script>
+  // import VueTouch from 'vue2-touch-events'
+
+  export default {
+    mounted() {
+      this.$store.dispatch("updateArea", 1);
+    },
+    methods: {
+      changelanguage(lang){
+        this.$store.dispatch("updlanguage", lang);
+
+      },
+      touchHandler(){
+        alert('touchHandler');
+      },  
+      swipeHandler(msg){
+      },
+      goback() {
+        this.$router.back();
+      },
+      jumpPage(src) {
+        this.$router.push({
+          path: src,
+        });
+      },
+    },
+
+  };
+  </script>
+<style scoped>
+.logo-img {
+/* Layout Properties */
+position: relative;
+top: 30px;
+left: 80px;
+width: 620px;
+height: 130px;
+/* UI Properties */
+background: transparent url('../../../public/images/logo.svg') 0% 0% no-repeat padding-box;
+opacity: 1;
+}
+
+.rgpage-box3 {
+  /* Layout Properties */
+justify-content: flex-start; /* 将 justify-content 设置为 flex-start */
+margin-left: 16px; /* 將 margin-left 設置為 0 */
+display: flex;
+align-items: center;
+position: relative;
+top: 120px;
+left: 60px;
+width: 240px;
+height: 240px;
+/* UI Properties */
+background: transparent linear-gradient(135deg, #D66081 0%, #AF2B4F 100%) 0% 0% no-repeat padding-box;
+box-shadow: 0px 3px 6px #00000029;
+border-radius: 8px;
+opacity: 1;
+}
+.rgpage-box2 {
+  /* Layout Properties */
+justify-content: flex-start; /* 将 justify-content 设置为 flex-start */
+margin-left: 16px; /* 將 margin-left 設置為 0 */
+display: flex;
+align-items: center;
+position: relative;
+top: 90px;
+left: 96px;
+width: 492px;
+height: 240px;
+/* UI Properties */
+background: transparent linear-gradient(134deg, #EAA74C 0%, #CE7D36 100%) 0% 0% no-repeat padding-box;
+box-shadow: 0px 0px 15px #2C5E4B;
+border-radius: 8px;
+opacity: 1;
+}
+.rgpage-box {
+  /* Layout Properties */
+  justify-content: flex-start; /* 将 justify-content 设置为 flex-start */
+margin-right: 0; /* 將 margin-right 設置為 0 */
+display: flex;
+align-items: center;
+position: relative;
+top: 90px;
+left: 80px;
+width: 492px;
+height: 240px;
+/* UI Properties */
+background: transparent linear-gradient(134deg, #60BFC1 0%, #379698 100%) 0% 0% no-repeat padding-box;
+box-shadow: 0px 0px 15px #2C5E4B;
+border-radius: 8px;
+opacity: 1;
+}.rgpage-img {
+top: 0px;
+left: 24px;
+width: 180px;
+height: 180px;
+background: transparent url('../../../public/images/icon-掛號查詢.svg') 0% 0% no-repeat padding-box;
+opacity: 1;
+margin-right: 20px;
+}.box2-img {
+top: 0px;
+left: 24px;
+width: 180px;
+height: 180px;
+background: transparent url('../../../public/images/icon-門診掛號.svg') 0% 0% no-repeat padding-box;
+opacity: 1;
+margin-right: 20px;
+}.box3-img {
+top: 0px;
+left: 24px;
+width: 110px;
+height: 110px;
+background: transparent url('../../../public/images/icon-慢箋領藥.svg') 0% 0% no-repeat padding-box;
+opacity: 1;
+margin-right: 20px;
+}.box3-font {
+font: var(--unnamed-font-style-normal) normal var(--unnamed-font-weight-bold) var(--unnamed-font-size-38)/var(--unnamed-line-spacing-43) var(--unnamed-font-family-arial);
+letter-spacing: var(--unnamed-character-spacing-1-14);
+color: var(--unnamed-color-ffffff);
+text-align: center;
+font: normal normal bold 38px/43px Arial;
+letter-spacing: 1.14px;
+color: #FFFFFF;
+text-shadow: 0px 3px 6px #00000029;
+opacity: 1;
+}.box4-img {
+top: 0px;
+left: 24px;
+width: 180px;
+height: 180px;
+background: transparent url('../../../public/images/icon-看診進度.svg') 0% 0% no-repeat padding-box;
+opacity: 1;
+margin-right: 20px;
+}.box5-img {
+top: 0px;
+left: 24px;
+width: 180px;
+height: 180px;
+background: transparent url('../../../public/images/icon-該看哪科.svg') 0% 0% no-repeat padding-box;
+opacity: 1;
+margin-right: 20px;
+}
+.rgpage-font{
+  /* Layout Properties */
+top: 10px;
+left: 20px;
+width: 250px;
+height: 77px;
+padding: 2px 2px 2px;
+/* UI Properties */
+font: var(--unnamed-font-style-normal) normal var(--unnamed-font-weight-bold) 55px/64px var(--unnamed-font-family-arial);
+color: var(--unnamed-color-ffffff);
+text-align: center;
+font: normal normal bold 55px/64px Arial;
+letter-spacing: 1.65px;
+color: #FFFFFF;
+text-shadow: 0px 3px 6px #00000029;
+opacity: 1;
+}
+.rgpage-img, .box2-img, .rgpage-font {
+  flex: 0 0 auto;
+  position: relative;
+}
+
+
+.rgpage-box {
+  flex: 1; /* 兩個子元素平均佔據可用空間 */
+}
+
+.containerbox {
+  display: flex; /* 將容器設置為彈性盒子 */
+  flex-direction: row;
+  /* width: 55%; */
+  width: 1000px;
+
+}
+
+.box {
+  flex: 1; /* 兩個子元素平均佔據可用空間 */
+  height: 100px;
+  background-color: gray;
+}
+
+</style>
+  

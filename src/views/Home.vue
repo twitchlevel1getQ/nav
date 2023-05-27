@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="bg">
     <div class="d-flex justify-content-center">
       <div class="img">
         <img

@@ -1,6 +1,7 @@
 <template>
     <div>
         <div class="d-flex flex-column input-data">
+
             <label for="idOrChart">輸入身分證號或病歷號:</label>
             <input type="text" id="idOrChart" v-model="inputData.idOrChart" @keyup.enter="emitInputData()">
             <label for="idOrChart">輸入處方號:</label>
@@ -29,13 +30,21 @@ export default {
   methods: {
     emitInputData () {
       this.$emit('update-data', this.inputData)
-    }
+    },
+    changeFunction (page) {
+      if (this.openPage === page) {
+        this.openPage = null
+      } else {
+        this.openPage = page
+        this.injData = null
+      }
+    },
   },
   computed: {
     buttonName () {
       let name
       if (this.clickedType === 'reserve') {
-        name = '進行預約'
+        name = '確認預約'
       } else if (this.clickedType === 'cancel') {
         name = '取消預約'
       }

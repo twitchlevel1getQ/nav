@@ -2,8 +2,9 @@ import { Base64 } from 'js-base64'
 import axios from 'axios'
 
 axios.defaults.timeout = 12000
-let path = 'http://10.6.51.133'
-// let path = "http://eip.sltung.com.tw";
+// let path = 'http://10.6.51.133'
+// let path = 'https://dmzeip443.sltung.com.tw'
+let path = "http://eip.sltung.com.tw";
 var gows = {
   callWS: async function (tag, param) {
     let wsParam = new FormData()
@@ -37,6 +38,29 @@ var gows = {
     wsParam.append('var', Base64.encode(JSON.stringify(param)))
     return new Promise((resolve, reject) => {
       axios.post('https://dmzeip443.sltung.com.tw/EIP/gows.php?wtag=' + tag, wsParam)
+      // axios.post('http://eip.sltung.com.tw/EIP/gows.php?wtag=' + tag, wsParam)
+        .then(
+          result => {
+            // http://eip.sltung.com.tw/
+            // 10.6.51.133
+            let rt = JSON.parse(Base64.decode(result.data))
+            try {
+              resolve(rt)
+            } catch (e) {
+              console.log(e)
+            }
+          }),
+      err => {
+        reject(err)
+      }
+    })
+  },callWSOffical2: async function (tag, param) {
+    let wsParam = new FormData()
+    wsParam.append('var', Base64.encode(JSON.stringify(param)))
+    return new Promise((resolve, reject) => {
+      // axios.post('https://dmzeip443.sltung.com.tw/EIP/gows.php?wtag=' + tag, wsParam)
+      // axios.post('http://eip.sltung.com.tw/EIP/gows.php?wtag=' + tag, wsParam)
+      axios.post('http://10.6.51.133/EIP/gows.php?wtag=' + tag, wsParam)
         .then(
           result => {
             // http://eip.sltung.com.tw/

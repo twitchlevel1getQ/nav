@@ -28,6 +28,9 @@ import './assets/css/bootstrap.min.css'
 import './assets/css/style.css'
 import './assets/js/bootstrap.min.js'
 import './assets/js/popper.min.js'
+import Vue2TouchEvents from 'vue2-touch-events'
+import touch from 'vue-directive-touch';
+
 
 Vue.component("font-awesome-icon", FontAwesomeIcon);
 Vue.config.productionTip = false
@@ -36,7 +39,15 @@ Vue.prototype.$gows = gows
 Vue.use(VueAxios, axios)
 Vue.use(CKEditor);
 Vue.use(VueSweetalert2);
+Vue.use(Vue2TouchEvents)
+Vue.use(touch);
 
+Vue.use(Vue2TouchEvents, {
+  disableClick: false,
+  touchClass: '',
+  tapTolerance: 10,
+  swipeTolerance: 30,
+})
 new Vue({
   router,
   store,
