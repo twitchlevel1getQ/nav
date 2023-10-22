@@ -214,23 +214,35 @@ title-deptname .date {
 }
 
 /* //!head end */
-
+.outpatient-section-small {
+  max-height: 1220px;
+  min-height: 1220px;
+  padding-top: 20%; /* 页头高度 */
+  overflow-y: auto;
+  scroll-margin-top: 420px; /* 设置初始位置的高度 */
+  border-radius: 40px 40px 0px 0px;
+  background-color: #fff;
+  opacity: 1;
+  top: 10%;
+  position: relative;
+}
 /* //! ChooseDept.vue start */
 .outpatient-section {
   display: block;
   overflow: hidden;
   margin-bottom: 30px;
+  background-color: #fff;
   border: 4px #f1f1f1 solid;
 }
 
 .footer {
-    height: 50px;
-    background-color: #f5f5f5;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-  }
+  height: 50px;
+  background-color: #f5f5f5;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
 ul {
   list-style: none;
   margin: 0px;
@@ -674,30 +686,30 @@ ul .row-p1 {
   margin: auto;
 }
 .bg-large {
-  width: 1920px;
-  height: 1080px;
+  width: 100%;
+  height: 100%;
+  position: relative;
   background: transparent url("../../../public/images/bg-03.png") 0% 0%
     no-repeat padding-box;
+  background-size: cover; /* 让背景图像自适应填充元素 */
+
   opacity: 1;
 }
 .bg-small {
-  /* Layout Properties */
-  top: 0px;
-  left: 0px;
-  width: 1080px;
-  height: 1920px;
-  /* UI Properties */
+  width: 100%;
+  height: 100%;
+  position: relative;
   background: transparent url("../../../public/images/bg.png") 0% 0% no-repeat
     padding-box;
+  background-size: cover; /* 让背景图像自适应填充元素 */
+
   opacity: 1;
 }
 .bigtitle {
-  /* Layout Properties */
   top: 0px;
   left: 0px;
   width: 1920px;
   height: 90px;
-  /* UI Properties */
   background: transparent
     linear-gradient(90deg, var(--unnamed-color-009a5b) 0%, #216bc3 100%) 0% 0%
     no-repeat padding-box;
@@ -705,15 +717,19 @@ ul .row-p1 {
     no-repeat padding-box;
   box-shadow: 0px 3px 6px #00000029;
   opacity: 1;
+  position: fixed;
+  z-index: 1;
 }
 .bigtitle-small {
   top: 0px;
   left: 0px;
-  width: 1080px;
-  height: 400px;
+  width: 100%;
+  height: 20%;
   border-radius: 40px 40px 0px 0px;
   opacity: 1;
-  background: transparent url("../../../public/images/bgtop-final.png") 0% 0% no-repeat padding-box;
+  background: transparent url("../../../public/images/bgtop-final.png") 0% 0%
+    no-repeat padding-box;
+  background-size: cover;
   position: fixed;
   z-index: 1;
 }
@@ -736,19 +752,509 @@ ul .row-p1 {
   opacity: 1;
 }
 .logo {
-    /* Layout Properties */
-top: 15px;
-left: 30px;
-width: 60px;
-height: 60px;
-position: absolute;
+  /* Layout Properties */
+  top: 15px;
+  left: 30px;
+  width: 60px;
+  height: 60px;
+  position: absolute;
 
-/* UI Properties */
-background: transparent url('../../../public/images/logo.png') 0% 0% no-repeat padding-box;
-opacity: 1;
+  /* UI Properties */
+  background: transparent url("../../../public/images/logo.png") 0% 0% no-repeat
+    padding-box;
+  opacity: 1;
 }
 .home {
-  background: transparent url("../../../public/images/bgtop-final.png") 0% 0% no-repeat padding-box;
+  background: transparent url("../../../public/images/bg.png") 0% 0% no-repeat
+    padding-box;
+
+  /* background: transparent url("../../../public/images/bgtop-final.png") 0% 0% no-repeat */
   height: 100%;
+  z-index: 1;
 }
+.pgup {
+  /* Layout Properties */
+  top: 988px;
+  left: 977px;
+  width: 98px;
+  height: 98px;
+  border-radius: 50%;
+  /* UI Properties */
+  background: var(--unnamed-color-f5d75e) 0% 0% no-repeat padding-box;
+  background: #f5d75e 0% 0% no-repeat padding-box;
+  box-shadow: 0px 3px 6px #00000029;
+  opacity: 0.5;
+  position: relative;
+}
+.arrow-round-back {
+  /* Layout Properties */
+  top: 21px;
+  left: 35px;
+  width: 28px;
+  height: 28px;
+  background: transparent url("../../../public/images/arrow-round-back.svg") 0%
+    0% no-repeat padding-box;
+  opacity: 1;
+  position: relative;
+}
+.circle {
+  position: relative;
+  width: 45%;
+  height: 0;
+  padding-bottom: 45%; /* 使用padding-bottom实现宽高比 */
+  border-radius: 50%;
+  /* UI Properties */
+  background: var(--unnamed-color-f5d75e) 0% 0% no-repeat padding-box;
+  background: #f5d75e 0% 0% no-repeat padding-box;
+  background-size: cover;
+  box-shadow: 0px 3px 6px #00000029;
+  opacity: 0.5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column; /* 新增代码：垂直方向布局 */
+}
+.circle::before {
+  content: "";
+  display: block;
+  padding-top: 100%; /* 控制伪元素的高度为宽度的百分比 */
+}
+.circle .circle-text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.circle img {
+  /* 图片的样式设置 */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.circle p {
+  /* 文字的样式设置 */
+  text-align: center;
+  color: #ffffff;
+  font-size: 3vw;
+}
+
+.circle-text {
+  /* UI Properties */
+  font: var(--unnamed-font-style-normal) normal
+    var(--unnamed-font-weight-medium) var(--unnamed-font-size-18) /
+    var(--unnamed-line-spacing-26) var(--unnamed-font-family-noto-sans-tc);
+  letter-spacing: var(--unnamed-character-spacing-0);
+  color: var(--unnamed-color-0a405c);
+  text-align: center;
+  font: normal normal medium 18px/26px Noto Sans TC;
+  font-size: 1vw;
+  letter-spacing: 0px;
+  color: #0a405c;
+  opacity: 1;
+}
+.divider {
+  width: 100%;
+  height: 1px;
+  margin-bottom: 10px; /* 添加底部间距 */
+}
+.titledivider {
+  width: 100%;
+  height: 80px;
+  margin-bottom: 10px; /* 添加底部间距 */
+}
+
+.logo-img {
+  /* Layout Properties */
+  position: relative;
+  top: 3%;
+  left: 5%;
+  width: 46%;
+  height: 10%;
+  /* UI Properties */
+  background: transparent url("../../../public/images/logo.svg") 0% 0% no-repeat
+    padding-box;
+  background-size: 100%;
+  opacity: 1;
+}
+.bottomfont-large {
+  /* Layout Properties */
+  position: relative;
+  top: 162px;
+  left: 293px;
+  width: 570px;
+  height: 44px;
+  /* UI Properties */
+  font: var(--unnamed-font-style-normal) normal var(--unnamed-font-weight-bold)
+    var(--unnamed-font-size-30) / var(--unnamed-line-spacing-36)
+    var(--unnamed-font-family-noto-sans-tc);
+  letter-spacing: var(--unnamed-character-spacing-0);
+  color: var(--unnamed-color-ffffff);
+  text-align: left;
+  font: normal normal bold 30px/36px Noto Sans TC;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+}
+.bottomfont-small {
+  /* Layout Properties */
+  position: absolute;
+  left: 0;
+  top: 85VH;
+  width: 100%;
+  height: 3%;
+  /* UI Properties */
+  font: var(--unnamed-font-style-normal) normal var(--unnamed-font-weight-medium) 43px/67px var(--unnamed-font-family-noto-sans-tc);
+  letter-spacing: var(--unnamed-character-spacing-0);
+  text-align: center;
+  font: normal normal medium 860px/1340px Noto Sans TC;
+  letter-spacing: 0px;
+  color: #e5e5e5;
+  opacity: 1;
+}
+.undisplayed {
+  display: none;
+}
+.topfont {
+  /* Layout Properties */
+  top: 50px;
+  left: 1106px;
+  width: 448px;
+  height: 56px;
+  position: absolute;
+
+  /* UI Properties */
+  color: var(--unnamed-color-ffffff);
+  text-align: left;
+  font: normal normal medium 40px/50px Futura;
+  letter-spacing: 2px;
+  color: #ffffff;
+  opacity: 1;
+}
+.topfont2 {
+  /* Layout Properties */
+  top: 50px;
+  left: 1395px;
+  width: 144px;
+  height: 56px;
+  position: absolute;
+
+  /* UI Properties */
+  font: var(--unnamed-font-style-normal) normal
+    var(--unnamed-font-weight-medium) var(--unnamed-font-size-40) / 50px
+    var(--unnamed-font-family-futura);
+  color: var(--unnamed-color-ffffff);
+  text-align: left;
+  font: normal normal medium 40px/50px Futura;
+  letter-spacing: 2px;
+  color: #ffffff;
+  opacity: 1;
+}
+.topfont3 {
+  /* Layout Properties */
+  top: 50px;
+  left: 1554px;
+  width: 116px;
+  height: 52px;
+  position: absolute;
+
+  /* UI Properties */
+  font: var(--unnamed-font-style-normal) normal
+    var(--unnamed-font-weight-medium) var(--unnamed-font-size-40) / 50px
+    var(--unnamed-font-family-futura);
+  color: var(--unnamed-color-ffffff);
+  text-align: left;
+  font: normal normal medium 40px/50px Futura;
+  letter-spacing: 2px;
+  color: #ffffff;
+  opacity: 1;
+}
+.topfont4 {
+  /* Layout Properties */
+  top: 50px;
+  left: 1712px;
+  width: 60px;
+  height: 80px;
+  position: absolute;
+
+  /* UI Properties */
+  font: var(--unnamed-font-style-normal) normal
+    var(--unnamed-font-weight-medium) var(--unnamed-font-size-30) /
+    var(--unnamed-line-spacing-36) var(--unnamed-font-family-noto-sans-tc);
+  letter-spacing: var(--unnamed-character-spacing-0);
+  color: var(--unnamed-color-ffffff);
+  text-align: left;
+  font: normal normal medium 30px/36px Noto Sans TC;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+}
+.topfont5 {
+  /* Layout Properties */
+  top: 50px;
+  left: 1782px;
+  width: 78px;
+  height: 78px;
+  position: absolute;
+
+  /* UI Properties */
+  background: transparent url("../../../public/images/天象.svg") 0% 0% no-repeat
+    padding-box;
+  opacity: 1;
+}
+.topfont6 {
+  /* Layout Properties */
+  top: 130px;
+  left: 1712px;
+  width: 114px;
+  height: 58px;
+  position: absolute;
+  /* UI Properties */
+  font: var(--unnamed-font-style-normal) normal
+    var(--unnamed-font-weight-medium) var(--unnamed-font-size-40) /
+    var(--unnamed-line-spacing-49) var(--unnamed-font-family-noto-sans-tc);
+  letter-spacing: var(--unnamed-character-spacing-0);
+  color: var(--unnamed-color-ffffff);
+  text-align: left;
+  font: normal normal medium 40px/49px Noto Sans TC;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+}
+.topfont7 {
+  top: 127px;
+  left: 1820px;
+  width: 39px;
+  height: 58px;
+  position: absolute;
+  background: transparent url("../../../public/images/度.svg") 0% 0% no-repeat
+    padding-box;
+  mix-blend-mode: normal;
+  opacity: 1;
+}
+.bigtitletime {
+  position: relative;
+  position: fixed;
+  right: 0;
+  top: 50%; /* 可選，設置垂直位置 */
+  transform: translateY(-50%); /* 可選，垂直居中對齊 */
+}
+.bigtitletime-tr-small {
+  position: relative;
+  position: fixed;
+  right: 0;
+  top: 50%; /* 可選，設置垂直位置 */
+  transform: translateY(-50%); /* 可選，垂直居中對齊 */
+
+  /* 其他樣式設置 */
+}
+.bigtitletime-tr {
+  position: absolute;
+  top: -30px; /* 可選，設置垂直位置 */
+
+  /* 其他樣式設置 */
+}
+.footer-small {
+  position: absolute;
+  padding-top: 100px;
+  height: 400px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  font: var(--unnamed-font-style-normal) normal
+    var(--unnamed-font-weight-medium) 43px/67px
+    var(--unnamed-font-family-noto-sans-tc);
+  letter-spacing: var(--unnamed-character-spacing-0);
+  text-align: center;
+  font: normal normal medium 860px/1340px Noto Sans TC;
+  letter-spacing: 0px;
+  color: #e5e5e5;
+  opacity: 1;
+}
+
+.button-container {
+  position: fixed;
+  top: 52vh; /* 设置DIV距离视窗顶部的距离为视口高度的30% */
+  left: 80vw; /* 设置DIV距离视窗左侧的距离为视口宽度的20% */
+  width: 40vw; /* 设置DIV的宽度为视口宽度的60% */
+  height: 40vw; /* 设置DIV的高度为宽度的9/16，保持固定的比例 */
+
+
+}
+
+.floating-button {
+  display: block;
+  margin-bottom: 10px;
+  padding: 10px;
+  background-color: #ccc;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  z-index: 3;
+}
+
+.floating-button:last-child {
+  margin-bottom: 0;
+}
+.text1 {
+  aspect-ratio: 9 / 16; /* 设置DIV的宽高比为 1080 * 1920 或者 540 * 960 */
+  font-size: 4vw; /* 设置字体大小为视口宽度的3% */
+  font-family: Arial;
+}
+.text2 {
+  aspect-ratio: 9 / 16; /* 设置DIV的宽高比为 1080 * 1920 或者 540 * 960 */
+  font-size: 9vw; /* 设置字体大小为视口宽度的3% */
+  font-family: Arial;
+}
+.text3 {
+  aspect-ratio: 9 / 16; /* 设置DIV的宽高比为 1080 * 1920 或者 540 * 960 */
+  font-size: 12vw; /* 设置字体大小为视口宽度的3% */
+  font-family: Arial;
+}
+.smalltopfont7 {
+  /* Layout Properties */
+  position: absolute;
+  top: 8%;
+  left:50.5VH;
+  background: transparent url("../../../public/images/度.svg") 0% 0% no-repeat
+  padding-box;
+  opacity: 1;
+}.smalltopfont6 {
+  /* Layout Properties */
+  position: absolute;
+  top: 8%;
+  left:44.5VH;
+  opacity: 1;
+}.smalltopfont5 {
+  /* Layout Properties */
+  position: absolute;
+  top: 3.5%;
+  left:48VH;
+  background: transparent url("../../../public/images/天象.svg") 0% 0% no-repeat
+  padding-box;
+opacity: 1;
+}.smalltopfont4 {
+  /* Layout Properties */
+  position: absolute;
+  top: 3%;
+  left:43vh;
+  width: 8%;
+  height: auto;
+  /* UI Properties */
+  font: var(--unnamed-font-style-normal) normal var(--unnamed-font-weight-bold)
+    var(--unnamed-font-size-40) / var(--unnamed-line-spacing-48)
+    var(--unnamed-font-family-arial);
+  color: var(--unnamed-color-0a405c);
+  text-align: right;
+  font: normal normal bold 40px/48px Arial;
+  letter-spacing: 1.2px;
+  color: #ffffff;
+  text-shadow: 0px 3px 6px #00000029;
+  opacity: 1;
+}.smalltopfont3 {
+  /* Layout Properties */
+  position: absolute;
+  top: 25%;
+  left: 13%;
+  width: 30%;
+  height: auto;
+  /* UI Properties */
+  font: var(--unnamed-font-style-normal) normal var(--unnamed-font-weight-bold)
+    var(--unnamed-font-size-40) / var(--unnamed-line-spacing-48)
+    var(--unnamed-font-family-arial);
+  color: var(--unnamed-color-0a405c);
+  text-align: right;
+  font: normal normal bold 40px/48px Arial;
+  letter-spacing: 1.2px;
+  color: #0a405c;
+  text-shadow: 0px 3px 6px #00000029;
+  opacity: 1;
+}
+.smalltopfont2 {
+  position: absolute;
+  /* Layout Properties */
+  top: 22%;
+  left: 13%;
+  width: 30%;
+  height: auto;
+  /* UI Properties */
+  font: var(--unnamed-font-style-normal) normal var(--unnamed-font-weight-bold)
+    var(--unnamed-font-size-40) / var(--unnamed-line-spacing-49)
+    var(--unnamed-font-family-arial);
+  color: var(--unnamed-color-0a405c);
+  text-align: right;
+  font: normal normal bold 40px/49px Arial;
+  letter-spacing: 1.2px;
+  color: #0a405c;
+  text-shadow: 0px 3px 6px #00000029;
+  opacity: 1;
+}
+.smalltopfont1 {
+  position: absolute;
+  /* Layout Properties */
+  top: 15%;
+  left: 13%;
+  width: 27%;
+  height: auto;
+  /* UI Properties */
+  font: var(--unnamed-font-style-normal) normal normal
+    var(--unnamed-font-size-120) / var(--unnamed-line-spacing-150)
+    var(--unnamed-font-family-arial);
+  letter-spacing: var(--unnamed-character-spacing-0);
+  color: var(--unnamed-color-0a405c);
+  text-align: right;
+  font: normal normal normal 120px/150px Arial;
+  aspect-ratio: 9 / 16; /* 设置DIV的宽高比为 1080 * 1920 或者 540 * 960 */
+  font-size: 20vw; /* 设置字体大小为视口宽度的3% */
+  letter-spacing: 0px;
+  color: #0a405c;
+  text-shadow: 0px 3px 6px #00000029;
+  opacity: 1;
+  font-size: 120px;
+}.smalltopfont1-ex {
+  position: absolute;
+  /* Layout Properties */
+  top: 0;
+  left: 0;
+  width: 27%;
+  height: auto;
+  /* UI Properties */
+  font: var(--unnamed-font-style-normal) normal normal
+    var(--unnamed-font-size-120) / var(--unnamed-line-spacing-150)
+    var(--unnamed-font-family-arial);
+  letter-spacing: var(--unnamed-character-spacing-0);
+  color: var(--unnamed-color-0a405c);
+  text-align: right;
+  font: normal normal normal 120px/150px Arial;
+  aspect-ratio: 9 / 16; /* 设置DIV的宽高比为 1080 * 1920 或者 540 * 960 */
+  font-size: 20vw; /* 设置字体大小为视口宽度的3% */
+  letter-spacing: 0px;
+  color: #0a405c;
+  text-shadow: 0px 3px 6px #00000029;
+  opacity: 1;
+  font-size: 120px;
+}
+.father-s {
+  position: absolute;
+  top:38%;
+  left: 3%;
+  right: 3%;
+  bottom: 26%;
+  display: flex;
+  flex-direction: column;
+
+}
+
 /* loading css  end*/

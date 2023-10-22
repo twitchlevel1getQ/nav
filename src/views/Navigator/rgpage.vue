@@ -1,31 +1,48 @@
 <template>
-  <div :class="['home']">
-    <div class="button-container">
-      <button class="floating-button">Button 1</button>
-      <button class="floating-button">Button 2</button>
-      <button class="floating-button">Button 3</button>
-    </div>
+  <div :class="homeclass">
     <loading :active.sync="isLoading"> </loading>
     <!-- //! head start -->
-    <div class="header">
-      
-      <div :class="resPositionClass">
-        <div class="logo"></div>
-        <div class="bigtitle-font">門診掛號</div>
-        <div
-        style="
-          padding: 10px 10px 0px 10px;
-          display: flex;
-          overflow: hidden;
-          flex-direction: row;
-          z-index: 2;
-        "
-      >
-        <button class="rollback" @click="jumpPage('/Navigator')">上一頁</button>
+    <div :class="titledivider"></div>
+
+    <div class="header"> <!--標題列-->
+      <div :class="resPositionClass"> <!--浮動按鈕-->
+        <div :class="logoimg"></div>
+        <div class="button-container">
+          <div class="circle" @click="jumpPage('/Navigator')">
+            <img src="../../../public/images/arrow-round-back.svg" alt="Icon" class="circle-icon" />
+            <br />
+            <span class="circle-text">上一頁</span>
+          </div>
+          <div class="divider"></div>
+          <div class="circle" @click="jumpPage('/Navigator')">
+            <img src="../../../public/images/btn-gohome.svg" alt="Icon" class="circle-icon" />
+          </div>
+        </div>
+        <div :class="bigtitlefont">門診掛號</div>
+        <div :class="bigtitletime">
+          <div :class="['topfont', topfont2Class]">
+            <span class="text">2023年1月5日</span>
+          </div>
+          <div :class="['topfont2', topfont3Class]">
+            <span class="text">星期四</span>
+          </div>
+          <div :class="['topfont3', topfont1Class]">
+            <span :class="bigtext">12:30</span>
+          </div>
+        </div>
+        <div style="
+            padding: 10px 10px 0px 10px;
+            display: flex;
+            overflow: hidden;
+            flex-direction: row;
+            z-index: 2;
+          "></div>
       </div>
-      </div>
-      
-    </div>
+    </div> <!-- //! head end -->
+
+
+
+
     <div :class="titleClass">
       <div v-for="(data, index) in rgdsmList" :key="index">
         <ul class="page-list">
@@ -39,18 +56,16 @@
             <li class="row-p1" v-for="(group, inx) in rgdsmList[index]">
               <!-- {{group}}
             {{inx}} -->
-              <div
-                @click="
-                  openDept(
-                    index,
-                    index,
-                    inx,
-                    rgdsmList[index][inx].div_no,
-                    rgdsmList[index][inx].nam,
-                    group.sd_no
-                  )
-                "
-              >
+              <div @click="
+                openDept(
+                  index,
+                  index,
+                  inx,
+                  rgdsmList[index][inx].div_no,
+                  rgdsmList[index][inx].nam,
+                  group.sd_no
+                )
+                ">
                 {{ rgdsmList[index][inx].nam }}
               </div>
             </li>
@@ -94,18 +109,70 @@
     </div> -->
     <!-- //! container end -->
     <div :class="footerClass">
+      <span :class="textbs">誠懇謙卑．感動服務．品質為先．創新卓越</span>
     </div>
+
   </div>
 </template>
 
 <script>
 export default {
   computed: {
+    titledivider() {
+      if (this.windowWidth <= 1081 || this.windowOrientation === "portrait") {
+        return "undisplayed"; // 窗口宽度小于等于 1081 时应用的样式类
+      } else {
+        return "titledivider"; // 窗口宽度大于 1081 时应用的样式类
+      }
+    }, bigtitletime() {
+      if (this.windowWidth <= 1081 || this.windowOrientation === "portrait") {
+        return "bigtitletime-tr-small"; // 窗口宽度小于等于 1081 时应用的样式类
+      } else {
+        return "bigtitletime-tr"; // 窗口宽度大于 1081 时应用的样式类
+      }
+    }, bigtitlefont() {
+      if (this.windowWidth <= 1081 || this.windowOrientation === "portrait") {
+        return "undisplayed"; // 窗口宽度小于等于 1081 时应用的样式类
+      } else {
+        return "bigtitle-font"; // 窗口宽度大于 1081 时应用的样式类
+      }
+    },
+    bottomfont() {
+      if (this.windowWidth <= 1081 || this.windowOrientation === "portrait") {
+        return "bottomfont-small"; // 窗口宽度小于等于 1081 时应用的样式类
+      } else {
+        return "bottomfont-large"; // 窗口宽度大于 1081 时应用的样式类
+      }
+    },
+    textbs() {
+      if (this.windowWidth <= 1081 || this.windowOrientation === "portrait") {
+        return "text1"; // 窗口宽度小于等于 1081 时应用的样式类
+      } else {
+        return "text2"; // 窗口宽度大于 1081 时应用的样式类
+      }
+    },
     footerClass() {
       // 根据条件判断是否应用共享的CSS类
       if (this.windowWidth <= 1081 || this.windowOrientation === "portrait") {
-        return "footer";
+        return "bottomfont-small";
       } else {
+        return "undisplayed";
+      }
+    },
+    logoimg() {
+      // 根据条件判断是否应用共享的CSS类
+      if (this.windowWidth <= 1081 || this.windowOrientation === "portrait") {
+        return "logo-img";
+      } else {
+        return "logo";
+      }
+    },
+    homeclass() {
+      // 根据条件判断是否应用共享的CSS类
+      if (this.windowWidth <= 1081 || this.windowOrientation === "portrait") {
+        return "home";
+      } else {
+        return "bg-large";
       }
     },
     resPositionClass() {
@@ -153,12 +220,52 @@ export default {
     };
   },
   mounted() {
+    window.addEventListener("resize", this.handleResize);
+    window.addEventListener("orientationchange", this.handleOrientationChange);
     this.getDeptList();
     this.getrgdsmList();
     this.getTime();
     this.interval1S();
   },
+  beforeDestroy() {
+    window.removeEventListener("resize", this.handleResize);
+    window.removeEventListener(
+      "orientationchange",
+      this.handleOrientationChange
+    );
+  },
   methods: {
+    bigtext() {
+      // 根据条件判断是否应用共享的CSS类
+      if (this.windowWidth <= 1081 || this.windowOrientation === "portrait") {
+        return "text3";
+      } else {
+        return "text";
+      }
+    },
+    topfont1Class() {
+      // 根据条件判断是否应用共享的CSS类
+      if (this.windowWidth <= 1081 || this.windowOrientation === "portrait") {
+        return "smalltopfont1";
+      } else {
+        return "";
+      }
+    },
+    topfont2Class() {
+      // 根据条件判断是否应用共享的CSS类
+      if (this.windowWidth <= 1081 || this.windowOrientation === "portrait") {
+        return "smalltopfont2";
+      } else {
+        return "";
+      }
+    }, topfont3Class() {
+      // 根据条件判断是否应用共享的CSS类
+      if (this.windowWidth <= 1081 || this.windowOrientation === "portrait") {
+        return "smalltopfont3";
+      } else {
+        return "";
+      }
+    },
     handleResize() {
       this.windowWidth = window.innerWidth;
     },
@@ -385,43 +492,4 @@ export default {
   },
 };
 </script>
-<style scoped>
-.footer {
-  height: 400px;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-}
-.outpatient-section-small {
-  max-height: 1520px;
-  padding-top: 220px; /* 页头高度 */
-  overflow-y: auto;
-  scroll-margin-top: 420px; /* 设置初始位置的高度 */
-  border-radius: 40px 40px 0px 0px;
-  opacity: 1;
-  top:10%;
-  position: relative;
-}
-.button-container {
-  position: fixed;
-  top: 50%;
-  right: 20px;
-  transform: translateY(-50%);
-}
 
-.floating-button {
-  display: block;
-  margin-bottom: 10px;
-  padding: 10px;
-  background-color: #ccc;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  z-index: 3;
-}
-
-.floating-button:last-child {
-  margin-bottom: 0;
-}
-</style>

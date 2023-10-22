@@ -1,137 +1,93 @@
 <template>
-  <div class="home">
+  <div :class="homeclass">
+    <div class="titledivider"></div>
+
     <loading :active.sync="isLoading"> </loading>
-    <!-- //! head start -->
-    <div class="logo"></div>
-    <div class="bigtitle">
-      <div class="bigtitle-font">
-        門診看診進度
-      </div>  
-    </div>
-    <div
-      style="
-        padding: 10px 10px 0px 10px;
-        justify-content: space-between;
-        overflow: hidden;
-      "
-    >
-      <button
-        class="rollback"
-        @click="jumpPage('/Navigator')"
-        v-if="this.$store.state.area != 0"
-      >
-        回首頁
-      </button>
-      <div class="input-group mb-1">
-        <input
-          type="text"
-          class="form-control"
-          style="max-width: 200px"
-          placeholder="搜尋科別"
-          v-model="searchDept"
-          @keyup.enter="toSearch()"
-        />
-        <div class="input-group-append">
-          <button class="btn btn-primary" @click="toSearch()">搜尋</button>
+
+    <div class="header">
+      <!--標題列-->
+      <div :class="resPositionClass">
+        <!--浮動按鈕-->
+        <div :class="logoimg"></div>
+        <div class="button-container">
+          <div class="circle" @click="jumpPage('/Navigator')">
+            <div class="circle-content">
+              <img
+                src="../../public/images/arrow-round-back.svg"
+                alt="Icon"
+                class="circle-icon"
+              />
+              <br />
+              <span class="circle-text">上一頁</span>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="circle" @click="jumpPage('/Navigator')">
+            <div class="circle-content">
+              <img
+                src="../../public/images/btn-gohome.svg"
+                alt="Icon"
+                class="circle-icon"
+              />
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-    <div style="padding: 0px 10px 0px 10px">
-      <div class="date">
-        <span class="date-left">
-          <span class="date-time"
-            >{{ today.date }}
-            <span style="color: #ff3434">{{ today.time }}</span></span
-          >
-        </span>
+        <div :class="bigtitlefont">門診看診進度</div>
+        <div :class="bigtitletime">
+          <div class="topfont">
+            <span class="text">2023年1月5日</span>
+          </div>
+          <div class="topfont2">
+            <span class="text">星期四</span>
+          </div>
+          <div class="topfont3">
+            <span class="text">12:30</span>
+          </div>
+        </div>
+        <div
+          style="
+            padding: 10px 10px 0px 10px;
+            display: flex;
+            overflow: hidden;
+            flex-direction: row;
+            z-index: 2;
+          "
+        ></div>
       </div>
     </div>
     <!-- //! head end -->
-
- <!-- //! container start -->
-    <!-- <div class="outpatient-section">
-    <ul class="page-list">
-        <div>
-          <li class="row-title">
-            <div class="title-left">
-              <font-awesome-icon icon="fa-solid fa-bookmark" />
-              <span class="kind">主科</span>
-            </div>
-          </li>
-          <li class="row-p1" 
-          v-for="(group, inx) in maindept"
-          >
-            <div
-              @click="
-                openDept(
-                  group.group,
-                  group.groupName,
-                  inx,
-                  group.group,
-                  group.groupName,
-                )
-              "
-            >
-              {{ group.groupName }}
-            </div>
-          </li>
-          <li class="row-p1" 
-          v-for="(group, inx) in getdeptList"
-          v-if="checkmaindept(group.deptID,group.deptGroupID) > '-1'"
-          >
-            <div
-              @click="
-                openDept(
-                  group.deptID,
-                  group.deptGroupName,
-                  inx,
-                  group.deptID,
-                  group.deptGroupName
-                )
-              "
-            >
-              {{ group.deptName }}
-            </div>
-          </li>
-        </div>
-      </ul>
-    </div> -->
-    <!-- //! container end -->
-    <!-- //! container start -->
-    <!-- {{pageGroup}} -->
-    <div
-      class="outpatient-section"
-      v-for="(data, index) in rgdsmList"
-      :key="index"
-    >
-      <ul class="page-list">
-        <div>
-          <li class="row-title">
-            <div class="title-left">
-              <font-awesome-icon icon="fa-solid fa-bookmark" />
-              <span class="kind">{{ index }}</span>
-            </div>
-          </li>
-          <li class="row-p1" v-for="(group, inx) in rgdsmList[index]">
-            <!-- {{group}}
+    <div :class="titleClass">
+      <div v-for="(data, index) in rgdsmList" :key="index">
+        <ul class="page-list">
+          <div>
+            <li class="row-title">
+              <div class="title-left">
+                <font-awesome-icon icon="fa-solid fa-bookmark" />
+                <span class="kind">{{ index }}</span>
+              </div>
+            </li>
+            <li class="row-p1" v-for="(group, inx) in rgdsmList[index]">
+              <!-- {{group}}
             {{inx}} -->
-            <div
-              @click="
-                openDept(
-                  index,
-                  index,
-                  inx,
-                  rgdsmList[index][inx].div_no,
-                  rgdsmList[index][inx].nam,
-                )
-              "
-            >
-              {{ rgdsmList[index][inx].nam }}
-            </div>
-          </li>
-        </div>
-      </ul>
+              <div
+                @click="
+                  openDept(
+                    index,
+                    index,
+                    inx,
+                    rgdsmList[index][inx].div_no,
+                    rgdsmList[index][inx].nam
+                  )
+                "
+              >
+                {{ rgdsmList[index][inx].nam }}
+              </div>
+            </li>
+          </div>
+        </ul>
+      </div>
     </div>
+
     <!-- //! container end -->
     <!-- {{pageGroup}} -->
     <!-- <div
@@ -166,18 +122,95 @@
         </div>
       </ul>
     </div> -->
+    <div :class="footerClass"><span :class="textbs">誠懇謙卑．感動服務．品質為先．創新卓越</span></div>
+
     <!-- //! container end -->
   </div>
 </template>
 
 <script>
 export default {
+  computed: {
+    bigtitletime() {
+      if (this.windowWidth <= 1081 || this.windowOrientation === "portrait") {
+        return "undisplayed"; // 窗口宽度小于等于 1081 时应用的样式类
+      } else {
+        return "bigtitletime"; // 窗口宽度大于 1081 时应用的样式类
+      }
+    },
+    bigtitlefont() {
+      if (this.windowWidth <= 1081 || this.windowOrientation === "portrait") {
+        return "undisplayed"; // 窗口宽度小于等于 1081 时应用的样式类
+      } else {
+        return "bigtitle-font"; // 窗口宽度大于 1081 时应用的样式类
+      }
+    },
+    bottomfont() {
+      if (this.windowWidth <= 1081 || this.windowOrientation === "portrait") {
+        return "bottomfont-small"; // 窗口宽度小于等于 1081 时应用的样式类
+      } else {
+        return "bottomfont-large"; // 窗口宽度大于 1081 时应用的样式类
+      }
+    },
+    textbs() {
+      if (this.windowWidth <= 1081 || this.windowOrientation === "portrait") {
+        return "text"; // 窗口宽度小于等于 1081 时应用的样式类
+      } else {
+        return "text2"; // 窗口宽度大于 1081 时应用的样式类
+      }
+    },
+    footerClass() {
+      // 根据条件判断是否应用共享的CSS类
+      if (this.windowWidth <= 1081 || this.windowOrientation === "portrait") {
+        return "bottomfont-small";
+      } else {
+      }
+    },
+    logoimg() {
+      // 根据条件判断是否应用共享的CSS类
+      if (this.windowWidth <= 1081 || this.windowOrientation === "portrait") {
+        return "logo-img";
+      } else {
+        return "logo";
+      }
+    },
+    homeclass() {
+      // 根据条件判断是否应用共享的CSS类
+      if (this.windowWidth <= 1081 || this.windowOrientation === "portrait") {
+        return "home";
+      } else {
+        return "bg-large";
+      }
+    },
+    resPositionClass() {
+      // 根据条件判断是否应用共享的CSS类
+      if (this.windowWidth <= 1081 || this.windowOrientation === "portrait") {
+        return "bigtitle-small";
+      } else {
+        return "bigtitle";
+      }
+    },
+    titleClass() {
+      // 根据条件判断是否应用共享的CSS类
+      if (this.windowWidth <= 1081 || this.windowOrientation === "portrait") {
+        return "outpatient-section-small";
+      } else {
+        return "outpatient-section";
+      }
+    },
+  },
   data() {
     return {
+      windowWidth: window.innerWidth,
+      windowOrientation: window.screen.orientation.type, // 初始化窗口方向
       isLoading: false,
-      
+
       // maindept: {320:320, 270:270, 350:350, 330:330, 340:340, 360:360, 310:310, 411:411, 500:500, 380:380, 253:253, 370:370, 300:300, 110:110, 218:218},
-      maindept: {"100":{"group": "100", "groupName": "內科" }, "200":{ "group": "200", "groupName": "外科" }, "300":{ "group": "300", "groupName": "口腔醫學部" }},
+      maindept: {
+        100: { group: "100", groupName: "內科" },
+        200: { group: "200", groupName: "外科" },
+        300: { group: "300", groupName: "口腔醫學部" },
+      },
       rgdsmList: [], //取得科別階層
       getdeptList: [], //!getapi所有資料
       //! 篩選後資料
@@ -194,13 +227,20 @@ export default {
     };
   },
   mounted() {
+    window.addEventListener("resize", this.handleResize);
+    window.addEventListener("orientationchange", this.handleOrientationChange);
     this.getDeptList();
     this.getrgdsmList();
-    this.getTime()
+    this.getTime();
     this.interval1S();
-
   },
   methods: {
+    handleResize() {
+      this.windowWidth = window.innerWidth;
+    },
+    handleOrientationChange() {
+      this.windowOrientation = window.screen.orientation.type;
+    },
     //! 取得時間
     interval1S() {
       this.timer = setInterval(() => {
@@ -248,19 +288,19 @@ export default {
         wb_base64: "0",
         wb_big5: "0",
         sd_frm_no: "1",
-        lang:this.$store.state.language,
+        lang: this.$store.state.language,
         authKey:
           "c81f94f568031f7157a0f7424be40c1ec81f94f568031f7157a0f7424be40c1e",
       };
       this.$gows.callWSOffical("evt.rg.getrgdsm", param).then((rt) => {
         if (rt.sts == "000000") {
           this.rgdsmList = rt.val;
-          console.log(this.rgdsmLis)
+          console.log(this.rgdsmLis);
         }
         // this.tidy();
         this.isLoading = false;
       });
-    },   
+    },
     //!取得所有診間資料
     getDeptList() {
       this.isLoading = true;
@@ -310,26 +350,38 @@ export default {
             this.pageGroup.groups[inx].push(obj);
           }
         });
-        console.log(this.pageGroup)
+      console.log(this.pageGroup);
     },
-    checkmaindept(id,dept)
-    {
-      
-      var maindept = ['320', '270', '350', '330', '340', '360', '310', '411', '500', '380', '253', '370', '300', '110', '218'];
-      if (maindept.indexOf(id) > '-1') {
+    checkmaindept(id, dept) {
+      var maindept = [
+        "320",
+        "270",
+        "350",
+        "330",
+        "340",
+        "360",
+        "310",
+        "411",
+        "500",
+        "380",
+        "253",
+        "370",
+        "300",
+        "110",
+        "218",
+      ];
+      if (maindept.indexOf(id) > "-1") {
         if (id == dept) {
           return 1;
-        } 
+        }
       }
       return -1; // -1
-
-    },  checkgroupID(id)
-    {
-      var idlist = [100, 200,];
+    },
+    checkgroupID(id) {
+      var idlist = [100, 200];
       // console.log(id)
       // console.log(idlist.indexOf(id))
       return idlist.indexOf(id); // -1
-
     },
     //! 跳SelectClinic
     openDept(groupID, groupName, inx, deptID, deptName) {

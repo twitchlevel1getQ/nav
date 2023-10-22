@@ -37,7 +37,8 @@ var gows = {
     let wsParam = new FormData()
     wsParam.append('var', Base64.encode(JSON.stringify(param)))
     return new Promise((resolve, reject) => {
-      axios.post('https://dmzeip443.sltung.com.tw/EIP/gows.php?wtag=' + tag, wsParam)
+      // axios.post('https://dmzeip443.sltung.com.tw/EIP/gows.php?wtag=' + tag, wsParam)
+      axios.post('http://10.6.51.133/EIP/gows.php?wtag=' + tag, wsParam)
       // axios.post('http://eip.sltung.com.tw/EIP/gows.php?wtag=' + tag, wsParam)
         .then(
           result => {

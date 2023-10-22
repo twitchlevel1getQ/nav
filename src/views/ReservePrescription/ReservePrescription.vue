@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 100vh">
+  <div :class="homeclass">
     <div class="loading" v-if="isLoading">
       <loading :active.sync="isLoading">
         <div class="loadingio-spinner-spinner-5cf73kkmxoq">
@@ -27,41 +27,216 @@
         </div>
       </loading>
     </div>
-    <div class="logo"></div>
+    <div :class="titledivider"></div>
 
-    <div class="bigtitle">
-      <div class="bigtitle-font">慢性病處方箋預約</div>
-    </div>
-    <button class="rollback" @click="jumpPage('/Navigator')">上一頁</button>
-
-    <nav class="menu border rounded-top m-auto">
-      <span
-        class="p-2 cursor-pointer"
-        :class="{ 'text-primary fw-bolder': clickedMenu == 'reserve' }"
-        @click="clickMenu('reserve')"
-        >預約</span
-      >
-      <span
-        class="p-2 cursor-pointer"
-        :class="{ 'text-primary fw-bolder': clickedMenu == 'search' }"
-        @click="clickMenu('search')"
-        >查詢/取消</span
-      >
-      <!-- <span class="p-2 cursor-pointer" :class="{'text-primary fw-bolder': clickedMenu == 'cancel'}"  @click="clickMenu('cancel')">查詢/取消</span> -->
-    </nav>
-    <!-- 預約 -->
-    <div class="mt-3" v-if="clickedMenu === 'reserve'">
-      <div class="button-set" v-if="!_isandroid()">
-        <button
-          style="float: right"
-          class="btn btn-primary style=“float:right”"
-          :class="{ 'btn-success': openPage === 'qrcodePage' }"
-          @click="changeFunction('qrcodePage')"
-        >
-          掃描QRcode
-        </button>
+    <div class="header">
+      <!--標題列-->
+      <div :class="resPositionClass">
+        <!--浮動按鈕-->
+        <div :class="logoimg"></div>
+        <div class="button-container">
+          <div class="circle" @click="jumpPage('/Navigator')">
+            <div class="circle-content">
+              <img
+                src="../../../public/images/arrow-round-back.svg"
+                alt="Icon"
+                class="circle-icon"
+              />
+              <br />
+              <span class="circle-text">上一頁</span>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="circle" @click="jumpPage('/Navigator')">
+            <div class="circle-content">
+              <img
+                src="../../../public/images/btn-gohome.svg"
+                alt="Icon"
+                class="circle-icon"
+              />
+            </div>
+          </div>
+        </div>
+        <div :class="bigtitlefont">慢性病處方箋預約</div>
+        <div :class="bigtitletime">
+          <div class="topfont">
+            <span class="text">2023年1月5日</span>
+          </div>
+          <div class="topfont2">
+            <span class="text">星期四</span>
+          </div>
+          <div class="topfont3">
+            <span class="text">12:30</span>
+          </div>
+        </div>
+        <div
+          style="
+            padding: 10px 10px 0px 10px;
+            display: flex;
+            overflow: hidden;
+            flex-direction: row;
+            z-index: 2;
+          "
+        ></div>
       </div>
-      <div class="inputPage w-100" v-if="result === null">
+    </div>
+    <!-- //! head end -->
+
+    <div :class="titleClass">
+      <nav class="menu border rounded-top m-auto">
+        <span
+          class="p-2 cursor-pointer"
+          :class="{ 'text-primary fw-bolder': clickedMenu == 'reserve' }"
+          @click="clickMenu('reserve')"
+          >預約</span
+        >
+        <span
+          class="p-2 cursor-pointer"
+          :class="{ 'text-primary fw-bolder': clickedMenu == 'search' }"
+          @click="clickMenu('search')"
+          >查詢/取消</span
+        >
+        <!-- <span class="p-2 cursor-pointer" :class="{'text-primary fw-bolder': clickedMenu == 'cancel'}"  @click="clickMenu('cancel')">查詢/取消</span> -->
+      </nav>
+      <!-- 預約 -->
+      <div class="mt-3" v-if="clickedMenu === 'reserve'">
+        <div class="button-set" v-if="!_isandroid()">
+          <button
+            style="float: right"
+            class="btn btn-primary style=“float:right”"
+            :class="{ 'btn-success': openPage === 'qrcodePage' }"
+            @click="changeFunction('qrcodePage')"
+          >
+            掃描QRcode
+          </button>
+        </div>
+        <div class="inputPage w-100" v-if="result === null">
+          <div
+            class="result-wrap"
+            v-if="openPage === 'qrcodePage'"
+            style="margin-top: 1rem"
+          >
+            <p v-if="error" class="text-danger">{{ error }}</p>
+            <qrcode-stream
+              :key="_uid"
+              @decode="onDecode"
+              @init="onInit"
+              :track="paintOutline"
+            />
+          </div>
+
+          <data-input-component
+            @update-data="getInputDate"
+            :clickedType="clickedMenu"
+          ></data-input-component>
+        </div>
+        <div
+          class="result-wrap"
+          v-else-if="result !== null && result.notice !== '已預約'"
+        >
+          <button class="btn btn-secondary" @click="clickedMenu = 'search'">
+            上一頁
+          </button>
+          <div>
+            請選擇院區:
+            <select v-model="selectedReservehosID">
+              <option
+                v-for="option2 in hosID"
+                :key="option2.id"
+                :value="option2.id"
+              >
+                {{ option2.hos }}
+              </option>
+            </select>
+          </div>
+          <div>
+            選擇要預約的日期:
+            <select v-model="selectedReserveDate">
+              <option
+                v-for="option in reserveDate"
+                :key="option.text"
+                :value="option.value"
+              >
+                {{ option.text }}
+              </option>
+            </select>
+          </div>
+          <div>
+            <div>
+              病歷號 {{ inputData.idOrChart }} 處方號 {{ result.injNumber }}
+            </div>
+            <div>
+              您的慢性病連續處方箋於
+              <span class="text-danger">{{ formatDate(result.opdDate) }}</span>
+              由
+              <span class="text-danger"
+                >{{ result.deptName }}-{{ result.doctorName }}</span
+              >
+              開出。<br />
+              最近領藥日為
+              <span class="text-danger">{{
+                formatDate(result.injDateRange.startDate)
+              }}</span
+              ><br />
+              此張慢箋於
+              <span class="text-danger">{{
+                formatDate(result.injDueDate)
+              }}</span>
+              即無效作廢，過此日期則不得領藥，需重新掛號看診。
+            </div>
+          </div>
+
+          <div style="height: 30px">
+            <button class="btn btn-primary float-end" @click="reserve()">
+              預約
+            </button>
+          </div>
+        </div>
+        <div class="result-wrap" v-else>
+          <div>
+            <div>
+              病歷號 {{ inputData.idOrChart }} 處方號 {{ result.injNumber }}
+              <button
+                class="btn btn-secondary float-end"
+                @click="clickedMenu = 'search'"
+              >
+                上一頁
+              </button>
+              <button
+                v-if="
+                  result.notice === '已預約' &&
+                  checkExpiration(result.injDueDate)
+                "
+                class="btn btn-warning"
+                @click="cancel(result)"
+              >
+                可取消
+              </button>
+            </div>
+            <div class="text-danger fs-5">
+              {{ getReservedData(result.injNumber) }}
+              您的慢性病處方箋已經預約於: {{ selectedReserveDate }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 查詢 -->
+      <div class="mt-3" v-if="clickedMenu === 'search'">
+        <div class="button-set">
+          <!-- <button class="btn btn-primary"
+                    :class="{'btn-success': openPage === 'inputPage'}"
+                    @click="changeFunction('inputPage')">
+                手動輸入資料
+            </button> -->
+          <button
+            class="btn btn-primary"
+            :class="{ 'btn-success': openPage === 'qrcodePage' }"
+            @click="changeFunction('qrcodePage')"
+          >
+            掃描QRcode
+          </button>
+        </div>
+
         <div
           class="result-wrap"
           v-if="openPage === 'qrcodePage'"
@@ -75,265 +250,148 @@
             :track="paintOutline"
           />
         </div>
-
-        <data-input-component
-          @update-data="getInputDate"
-          :clickedType="clickedMenu"
-        ></data-input-component>
-      </div>
-      <div
-        class="result-wrap"
-        v-else-if="result !== null && result.notice !== '已預約'"
-      >
-        <button class="btn btn-secondary" @click="clickedMenu = 'search'">
-          上一頁
-        </button>
-        <div>
-          請選擇院區:
-          <select v-model="selectedReservehosID">
-            <option
-              v-for="option2 in hosID"
-              :key="option2.id"
-              :value="option2.id"
-            >
-              {{ option2.hos }}
-            </option>
-          </select>
-        </div>
-        <div>
-          選擇要預約的日期:
-          <select v-model="selectedReserveDate">
-            <option
-              v-for="option in reserveDate"
-              :key="option.text"
-              :value="option.value"
-            >
-              {{ option.text }}
-            </option>
-          </select>
-        </div>
-        <div>
-          <div>
-            病歷號 {{ inputData.idOrChart }} 處方號 {{ result.injNumber }}
-          </div>
-          <div>
-            您的慢性病連續處方箋於
-            <span class="text-danger">{{ formatDate(result.opdDate) }}</span> 由
-            <span class="text-danger"
-              >{{ result.deptName }}-{{ result.doctorName }}</span
-            >
-            開出。<br />
-            最近領藥日為
-            <span class="text-danger">{{
-              formatDate(result.injDateRange.startDate)
-            }}</span
-            ><br />
-            此張慢箋於
-            <span class="text-danger">{{ formatDate(result.injDueDate) }}</span>
-            即無效作廢，過此日期則不得領藥，需重新掛號看診。
-          </div>
+        <div class="inputPage w-100">
+          <!-- <div class="inputPage w-100" v-if="openPage === 'inputPage'"> -->
+          <search-input-component
+            :clickedType="clickedMenu"
+            @update-data="getInputDate"
+          ></search-input-component>
         </div>
 
-        <div style="height: 30px">
-          <button class="btn btn-primary float-end" @click="reserve()">
-            預約
-          </button>
-        </div>
-      </div>
-      <div class="result-wrap" v-else>
-        <div>
-          <div>
-            病歷號 {{ inputData.idOrChart }} 處方號 {{ result.injNumber }}
-            <button
-              class="btn btn-secondary float-end"
-              @click="clickedMenu = 'search'"
-            >
-              上一頁
-            </button>
-            <button
-              v-if="
-                result.notice === '已預約' && checkExpiration(result.injDueDate)
-              "
-              class="btn btn-warning"
-              @click="cancel(result)"
-            >
-              可取消
-            </button>
-          </div>
-          <div class="text-danger fs-5">
-            {{ getReservedData(result.injNumber) }}
-            您的慢性病處方箋已經預約於: {{ selectedReserveDate }}
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- 查詢 -->
-    <div class="mt-3" v-if="clickedMenu === 'search'">
-      <div class="button-set">
-        <!-- <button class="btn btn-primary"
-                    :class="{'btn-success': openPage === 'inputPage'}"
-                    @click="changeFunction('inputPage')">
-                手動輸入資料
-            </button> -->
-        <button
-          class="btn btn-primary"
-          :class="{ 'btn-success': openPage === 'qrcodePage' }"
-          @click="changeFunction('qrcodePage')"
+        <!-- test -->
+        <div
+          class="container"
+          v-if="injData && filterResult && injData.isSuccess === 'Y'"
         >
-          掃描QRcode
-        </button>
-      </div>
-
-      <div
-        class="result-wrap"
-        v-if="openPage === 'qrcodePage'"
-        style="margin-top: 1rem"
-      >
-        <p v-if="error" class="text-danger">{{ error }}</p>
-        <qrcode-stream
-          :key="_uid"
-          @decode="onDecode"
-          @init="onInit"
-          :track="paintOutline"
-        />
-      </div>
-      <div class="inputPage w-100">
-        <!-- <div class="inputPage w-100" v-if="openPage === 'inputPage'"> -->
-        <search-input-component
-          :clickedType="clickedMenu"
-          @update-data="getInputDate"
-        ></search-input-component>
-      </div>
-
-      <!-- test -->
-      <div
-        class="container"
-        v-if="injData && filterResult && injData.isSuccess === 'Y'"
-      >
-        <table class="table table-striped table-bordered">
-          <thead>
-            <tr>
-              <th>科別</th>
-              <th>處方日期</th>
-              <th>處方號</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="data in filterResult" :key="data.injNumber">
-              <td>{{ data.deptName }}</td>
-              <td>{{ data.opdDate }}</td>
-              <td>{{ data.injNumber }}</td>
-              <td>
-                <button
-                  v-if="
-                    data.notice === '可預約' && checkExpiration(data.injDueDate)
-                  "
-                  class="btn btn-success"
-                  @click="reservePrescription(data)"
-                >
-                  {{ data.notice }}
-                </button>
-                <span
-                  v-else-if="
-                    data.notice === '已預約' && data.fvDate != undefined
-                  "
-                >
+          <table class="table table-striped table-bordered">
+            <thead>
+              <tr>
+                <th>科別</th>
+                <th>處方日期</th>
+                <th>處方號</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="data in filterResult" :key="data.injNumber">
+                <td>{{ data.deptName }}</td>
+                <td>{{ data.opdDate }}</td>
+                <td>{{ data.injNumber }}</td>
+                <td>
                   <button
                     v-if="
-                      data.notice === '已預約' &&
+                      data.notice === '可預約' &&
                       checkExpiration(data.injDueDate)
                     "
-                    class="btn btn-warning"
-                    @click="cancel(data)"
+                    class="btn btn-success"
+                    @click="reservePrescription(data)"
                   >
-                    可取消
+                    {{ data.notice }}
                   </button>
-                  <!-- {{ data.notice }}-{{ formatDate(data.fvDate) }} -->
-                </span>
-              </td>
+                  <span
+                    v-else-if="
+                      data.notice === '已預約' && data.fvDate != undefined
+                    "
+                  >
+                    <button
+                      v-if="
+                        data.notice === '已預約' &&
+                        checkExpiration(data.injDueDate)
+                      "
+                      class="btn btn-warning"
+                      @click="cancel(data)"
+                    >
+                      可取消
+                    </button>
+                    <!-- {{ data.notice }}-{{ formatDate(data.fvDate) }} -->
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!--取消 -->
+      <div class="mt-3" v-if="clickedMenu === 'cancel'">
+        <div class="inputPage w-100">
+          <data-input-component
+            @update-data="getInputDate"
+            :clickedType="clickedMenu"
+          ></data-input-component>
+        </div>
+      </div>
+
+      <div class="hs">
+        <hr />
+      </div>
+      <!-- 注意事項 -->
+      <br />
+      <div class="inputPage w-100">
+        <table class="tbl1 tbl-info">
+          <tbody>
+            <tr>
+              <th colspan="4">梧棲院區領藥時間</th>
+            </tr>
+            <tr>
+              <td></td>
+              <td>系統接受預約時間</td>
+              <td>可領藥時間</td>
+              <td>領藥地點</td>
+            </tr>
+            <tr>
+              <td>週一~週五</td>
+              <td>08:00~21:30</td>
+              <td>08:30~22:00</td>
+              <td>梧棲B1門診藥局</td>
+            </tr>
+            <tr>
+              <td>週六~週日<br />國定假日</td>
+              <td>08:00~12:30</td>
+              <td>08:30~13:00</td>
+              <td>梧棲B1門診藥局</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="inputPage w-100">
+        <table class="tbl2 tbl-info">
+          <tbody>
+            <tr>
+              <th colspan="4">
+                <span id="Label5">沙鹿院區領藥時間</span>
+              </th>
+            </tr>
+            <tr>
+              <td></td>
+              <td>系統接受預約時間</td>
+              <td>可領藥時間</td>
+              <td>領藥地點</td>
+            </tr>
+            <tr>
+              <td>週一~週五</td>
+              <td>08:00~21:30</td>
+              <td>08:30~22:00</td>
+              <td>沙鹿1F門診藥局</td>
+            </tr>
+            <tr>
+              <td>週六</td>
+              <td>08:00~12:30</td>
+              <td>08:30~13:00</td>
+              <td>沙鹿1F門診藥局</td>
+            </tr>
+            <tr>
+              <td>週日</td>
+              <td colspan="3">不開放預約領藥</td>
+            </tr>
+            <tr>
+              <td>國定假日</td>
+              <td colspan="3">不開放預約領藥</td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
-    <!--取消 -->
-    <div class="mt-3" v-if="clickedMenu === 'cancel'">
-      <div class="inputPage w-100">
-        <data-input-component
-          @update-data="getInputDate"
-          :clickedType="clickedMenu"
-        ></data-input-component>
-      </div>
-    </div>
-
-    <div class="hs">
-      <hr />
-    </div>
-    <!-- 注意事項 -->
-    <br />
-    <div class="inputPage w-100">
-      <table class="tbl1 tbl-info">
-        <tbody>
-          <tr>
-            <th colspan="4">梧棲院區領藥時間</th>
-          </tr>
-          <tr>
-            <td></td>
-            <td>系統接受預約時間</td>
-            <td>可領藥時間</td>
-            <td>領藥地點</td>
-          </tr>
-          <tr>
-            <td>週一~週五</td>
-            <td>08:00~21:30</td>
-            <td>08:30~22:00</td>
-            <td>梧棲B1門診藥局</td>
-          </tr>
-          <tr>
-            <td>週六~週日<br />國定假日</td>
-            <td>08:00~12:30</td>
-            <td>08:30~13:00</td>
-            <td>梧棲B1門診藥局</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="inputPage w-100">
-      <table class="tbl2 tbl-info">
-        <tbody>
-          <tr>
-            <th colspan="4">
-              <span id="Label5">沙鹿院區領藥時間</span>
-            </th>
-          </tr>
-          <tr>
-            <td></td>
-            <td>系統接受預約時間</td>
-            <td>可領藥時間</td>
-            <td>領藥地點</td>
-          </tr>
-          <tr>
-            <td>週一~週五</td>
-            <td>08:00~21:30</td>
-            <td>08:30~22:00</td>
-            <td>沙鹿1F門診藥局</td>
-          </tr>
-          <tr>
-            <td>週六</td>
-            <td>08:00~12:30</td>
-            <td>08:30~13:00</td>
-            <td>沙鹿1F門診藥局</td>
-          </tr>
-          <tr>
-            <td>週日</td>
-            <td colspan="3">不開放預約領藥</td>
-          </tr>
-          <tr>
-            <td>國定假日</td>
-            <td colspan="3">不開放預約領藥</td>
-          </tr>
-        </tbody>
-      </table>
+    <div :class="footerClass">
+      <span :class="textbs">誠懇謙卑．感動服務．品質為先．創新卓越</span>
     </div>
   </div>
 </template>
@@ -348,6 +406,9 @@ import "vue-loading-overlay/dist/vue-loading.css";
 export default {
   data() {
     return {
+      windowWidth: window.innerWidth,
+      windowOrientation: window.screen.orientation.type, // 初始化窗口方向
+
       injData: "",
       result: null,
       error: "",
@@ -366,6 +427,8 @@ export default {
     };
   },
   mounted() {
+    window.addEventListener("resize", this.handleResize);
+    window.addEventListener("orientationchange", this.handleOrientationChange);
     this.set();
     if (this._isMobile()) {
       if (this._isandroid()) {
@@ -375,8 +438,21 @@ export default {
       // alert("pc端");
     }
   },
+  beforeDestroy() {
+    window.removeEventListener("resize", this.handleResize);
+    window.removeEventListener(
+      "orientationchange",
+      this.handleOrientationChange
+    );
+  },
   created() {},
   methods: {
+    handleResize() {
+      this.windowWidth = window.innerWidth;
+    },
+    handleOrientationChange() {
+      this.windowOrientation = window.screen.orientation.type;
+    },
     //App.vue
     _isMobile() {
       let flag = navigator.userAgent.match(
@@ -888,6 +964,73 @@ export default {
     },
   },
   computed: {
+    bigtitletime() {
+      if (this.windowWidth <= 1081 || this.windowOrientation === "portrait") {
+        return "undisplayed"; // 窗口宽度小于等于 1081 时应用的样式类
+      } else {
+        return "bigtitletime"; // 窗口宽度大于 1081 时应用的样式类
+      }
+    },
+    bigtitlefont() {
+      if (this.windowWidth <= 1081 || this.windowOrientation === "portrait") {
+        return "undisplayed"; // 窗口宽度小于等于 1081 时应用的样式类
+      } else {
+        return "bigtitle-font"; // 窗口宽度大于 1081 时应用的样式类
+      }
+    },
+    bottomfont() {
+      if (this.windowWidth <= 1081 || this.windowOrientation === "portrait") {
+        return "bottomfont-small"; // 窗口宽度小于等于 1081 时应用的样式类
+      } else {
+        return "bottomfont-large"; // 窗口宽度大于 1081 时应用的样式类
+      }
+    },
+    textbs() {
+      if (this.windowWidth <= 1081 || this.windowOrientation === "portrait") {
+        return "text1"; // 窗口宽度小于等于 1081 时应用的样式类
+      } else {
+        return "text2"; // 窗口宽度大于 1081 时应用的样式类
+      }
+    },
+    footerClass() {
+      // 根据条件判断是否应用共享的CSS类
+      if (this.windowWidth <= 1081 || this.windowOrientation === "portrait") {
+        return "bottomfont-small";
+      } else {
+      }
+    },
+    logoimg() {
+      // 根据条件判断是否应用共享的CSS类
+      if (this.windowWidth <= 1081 || this.windowOrientation === "portrait") {
+        return "logo-img";
+      } else {
+        return "logo";
+      }
+    },
+    homeclass() {
+      // 根据条件判断是否应用共享的CSS类
+      if (this.windowWidth <= 1081 || this.windowOrientation === "portrait") {
+        return "home";
+      } else {
+        return "bg-large";
+      }
+    },
+    resPositionClass() {
+      // 根据条件判断是否应用共享的CSS类
+      if (this.windowWidth <= 1081 || this.windowOrientation === "portrait") {
+        return "bigtitle-small";
+      } else {
+        return "bigtitle";
+      }
+    },
+    titleClass() {
+      // 根据条件判断是否应用共享的CSS类
+      if (this.windowWidth <= 1081 || this.windowOrientation === "portrait") {
+        return "outpatient-section-small";
+      } else {
+        return "outpatient-section";
+      }
+    },
     reserveDate() {
       console.log(this.selectedReservehosID);
       console.log(602);
@@ -1074,5 +1217,10 @@ export default {
 .hs {
   width: 80%;
   /* margin-left: 150px; */
+}
+.titledivider {
+  width: 100%;
+  height: 100px;
+  margin-bottom: 10px; /* 添加底部间距 */
 }
 </style>
